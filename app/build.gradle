@@ -1,0 +1,73 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        applicationId "com.gemalto.mobileprotector.sample"
+        minSdkVersion 21
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0-RC1"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    flavorDimensions "version"
+    productFlavors {
+        setup {
+            dimension "version"
+        }
+
+        provisioning {
+            dimension "version"
+        }
+
+        otp {
+            dimension "version"
+        }
+    }
+
+    sourceSets {
+        // Add native Mobile Protector SDK libraries.
+        debug {
+            jniLibs.srcDirs = ['libs/debug']
+        }
+
+        release {
+            jniLibs.srcDirs = ['libs/release']
+        }
+    }
+}
+
+dependencies {
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    implementation 'com.android.support:support-v4:28.0.0'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+    // Add Mobile Protector SDK libraries.
+    releaseImplementation files('libs/release/libidpmobile.jar')
+    debugImplementation files('libs/debug/libidpmobile.jar')
+
+    // Add module for setup
+    implementation project(':01_setup')
+
+    // Add module for provisioning
+    implementation project(':02_provisioning')
+
+    // Add module for OTP generation
+    implementation project(':03_otp')
+
+    // Add common code module
+    implementation project(':commonutils')
+
+    // Add JNA dependency.
+    implementation 'net.java.dev.jna:jna:4.5.0@aar'
+}

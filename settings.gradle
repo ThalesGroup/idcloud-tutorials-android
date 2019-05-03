@@ -1,0 +1,5 @@
+include ':app', ':01_setup', ':02_provisioning', ':03_otp', ':commonutils'
+
+project(":01_setup").projectDir = file("GettingStarted/01_Setup")
+project(":02_provisioning").projectDir = file("GettingStarted/02_Provisioning")
+project(":03_otp").projectDir = file("GettingStarted/03_OTP")

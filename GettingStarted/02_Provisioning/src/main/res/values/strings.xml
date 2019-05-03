@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">02_Provisioning</string>
+
+    <!--Provision Fragment-->
+    <string name="user_id_provision_fragment">Enter User ID</string>
+    <string name="enter_reg_code_provision_fragment">Enter Registration Code</string>
+    <string name="provision_provision_fragment">Provision</string>
+
+</resources>

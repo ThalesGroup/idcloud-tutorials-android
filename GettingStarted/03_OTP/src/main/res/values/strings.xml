@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">03_OTP</string>
+
+    <!--OTP Fragment-->
+    <string name="generate_otp_fragment">One Time Password</string>
+    <string name="remove_otp_fragment">Remove Token</string>
+
+</resources>
