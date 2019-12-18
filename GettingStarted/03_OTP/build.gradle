@@ -27,11 +27,13 @@ android {
 dependencies {
 
     // Add Mobile Protector SDK libraries.
+    // Tested with Mobile Protector SDK 5.2
     releaseCompileOnly files('../../app/libs/release/libidpmobile.jar')
     debugCompileOnly files('../../app/libs/debug/libidpmobile.jar')
 
     // Add common code module
     compileOnly project(':commonutils')
+    compileOnly project(':02_provisioning')
 
     implementation 'com.android.support:appcompat-v7:28.0.0'
     testImplementation 'junit:junit:4.12'

@@ -51,6 +51,7 @@ import com.gemalto.idp.mobile.ui.secureinput.SecureInputBuilderV2;
 import com.gemalto.idp.mobile.ui.secureinput.SecureInputService;
 import com.gemalto.idp.mobile.ui.secureinput.SecureInputUi;
 import com.gemalto.idp.mobile.ui.secureinput.SecurePinpadListenerV2;
+import com.gemalto.mobileprotector.sample.provisioning.ProvisioningConfig;
 
 import java.util.Set;
 
@@ -153,7 +154,7 @@ public class OtpLogic {
     @Nullable
     public static SoftOathToken getToken(@NonNull final String name) throws IdpException {
         final OathTokenManager oathTokenManager = OathService.create(OtpModule.create()).getTokenManager();
-        return oathTokenManager.getToken(name);
+        return oathTokenManager.getToken(name, ProvisioningConfig.getCustomFingerprintData());
     }
 
     /**

@@ -29,12 +29,17 @@ package com.gemalto.mobileprotector.sample.provisioning;
 
 import android.support.annotation.NonNull;
 
+import com.gemalto.idp.mobile.core.IdpException;
 import com.gemalto.idp.mobile.core.IdpNetworkException;
 import com.gemalto.idp.mobile.core.IdpStorageException;
 import com.gemalto.idp.mobile.core.devicefingerprint.DeviceFingerprintException;
+import com.gemalto.idp.mobile.core.devicefingerprint.DeviceFingerprintSource;
 import com.gemalto.idp.mobile.core.passwordmanager.PasswordManagerException;
 import com.gemalto.idp.mobile.core.util.SecureString;
 import com.gemalto.idp.mobile.otp.OtpModule;
+import com.gemalto.idp.mobile.otp.Token;
+import com.gemalto.idp.mobile.otp.TokenManager;
+import com.gemalto.idp.mobile.otp.devicefingerprint.DeviceFingerprintTokenPolicy;
 import com.gemalto.idp.mobile.otp.oath.OathService;
 import com.gemalto.idp.mobile.otp.oath.OathToken;
 import com.gemalto.idp.mobile.otp.oath.OathTokenManager;
@@ -45,6 +50,7 @@ import com.gemalto.mobileprotector.sample.util.thread.ExecutionService;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Map;
 
 /**
  * Logic for token provisioning using Mobile Protector SDK.
@@ -67,40 +73,39 @@ public class ProvisioningLogic {
         final OathTokenManager oathTokenManager = OathService.create(OtpModule.create()).getTokenManager();
         try {
             final ProvisioningConfiguration provisioningConfiguration = new EpsConfigurationBuilder(registrationCode,
-                                                                                                    new URL(ProvisioningConfig
-                                                                                                                    .getProvisioningUrl()),
-                                                                                                    MobileProvisioningProtocol.PROVISIONING_PROTOCOL_V3,
-                                                                                                    ProvisioningConfig
-                                                                                                            .getRsaKeyId(),
-                                                                                                    ProvisioningConfig
-                                                                                                            .getRsaKeyExponent(),
-                                                                                                    ProvisioningConfig
-                                                                                                            .getRsaKeyModulus())
+                                                                                                    new URL(ProvisioningConfig.getProvisioningUrl()),
+                                                                                                    ProvisioningConfig.getDomain(),
+                                                                                                    MobileProvisioningProtocol.PROVISIONING_PROTOCOL_V5,
+                                                                                                    ProvisioningConfig.getRsaKeyId(),
+                                                                                                    ProvisioningConfig.getRsaKeyExponent(),
+                                                                                                    ProvisioningConfig.getRsaKeyModulus())
                     .setTlsConfiguration(ProvisioningConfig.getTlsConfiguration()).build();
 
-            ExecutionService.getExecutionService().runOnBackgroudThread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        final OathToken token = oathTokenManager.createToken(userId, provisioningConfiguration);
-                        ExecutionService.getExecutionService().runOnMainUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                callback.onProvisioningSuccess(token);
-                            }
-                        });
-                    } catch (final IdpStorageException | PasswordManagerException | DeviceFingerprintException | IdpNetworkException e) {
-                        ExecutionService.getExecutionService().runOnMainUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                callback.onProvisioningError(e);
-                            }
-                        });
-                    } finally {
-                        registrationCode.wipe();
-                    }
-                }
-            });
+            final DeviceFingerprintSource
+                    deviceFingerprintSource = new DeviceFingerprintSource(ProvisioningConfig.getCustomFingerprintData(),
+                                                                          DeviceFingerprintSource.Type.SOFT);
+            final DeviceFingerprintTokenPolicy
+                    deviceFingerprintTokenPolicy = new DeviceFingerprintTokenPolicy(true,
+                                                                                    deviceFingerprintSource);
+
+
+            oathTokenManager.createToken(userId,
+                                         provisioningConfiguration,
+                                         deviceFingerprintTokenPolicy,
+                                         new TokenManager.TokenCreationCallback() {
+                                             @Override
+                                             public void onSuccess(final Token token,
+                                                                   final Map<String, String> map) {
+                                                 callback.onProvisioningSuccess((OathToken) token);
+                                                 registrationCode.wipe();
+                                             }
+
+                                             @Override
+                                             public void onError(final IdpException e) {
+                                                 callback.onProvisioningError(e);
+                                                 registrationCode.wipe();
+                                             }
+                                         });
         } catch (final MalformedURLException e) {
             // This should not happen.
             throw new IllegalStateException(e.getMessage());

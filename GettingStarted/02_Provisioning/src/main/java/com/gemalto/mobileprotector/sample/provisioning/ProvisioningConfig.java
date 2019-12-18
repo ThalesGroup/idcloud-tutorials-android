@@ -29,6 +29,8 @@ package com.gemalto.mobileprotector.sample.provisioning;
 
 import com.gemalto.idp.mobile.core.net.TlsConfiguration;
 
+import java.io.UnsupportedEncodingException;
+
 /**
  * Values needed for Token provisioning.
  */
@@ -38,12 +40,22 @@ public class ProvisioningConfig {
      * The URL of the Enrollment API endpoint, e.g: https://api/provisioning/pp
      */
 
-    private static final String PROVISIONING_URL = "https://provisioning-url";
+    private static final String PROVISIONING_URL = "PROVISIONING_URL";
 
     /**
      * Identifier for the EPS server’s public RSA key.
      */
-    private static final String RSA_KEY_ID = "eps-public-key";
+    private static final String RSA_KEY_ID = "RSA_KEY_ID";
+
+    /**
+     * Custom fingerprint data.
+     */
+    private static final String CUSTOM_FINGERPRINT_DATA = "CUSTOM_FINGERPRINT_DATA";
+
+    /**
+     * Domain.
+     */
+    private static final String DOMAIN = "DOMAIN";
 
     /**
      * The RSA modulus of the EPS public key (on provisioning protocol level, not transport level).
@@ -153,4 +165,28 @@ public class ProvisioningConfig {
     public static String getRsaKeyId() {
         return RSA_KEY_ID;
     }
+
+    /**
+     * Gets the custom fingerprint data.
+     *
+     * @return Custom fingerprint data.
+     */
+    public static byte[] getCustomFingerprintData() {
+        try {
+            return CUSTOM_FINGERPRINT_DATA.getBytes("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            // This should not happen.
+            throw new IllegalStateException(e);
+        }
+    }
+
+    /**
+     * Gets the domain.
+     *
+     * @return Domain.
+     */
+    public static String getDomain() {
+        return DOMAIN;
+    }
+
 }

@@ -27,7 +27,7 @@ android {
 dependencies {
 
     // Add Mobile Protector SDK libraries.
-    // Tested with Mobile Protector SDK 4.8.1
+    // Tested with Mobile Protector SDK 5.2
     releaseCompileOnly files('../../app/libs/release/libidpmobile.jar')
     debugCompileOnly files('../../app/libs/debug/libidpmobile.jar')
 
