@@ -1,0 +1,9 @@
+<resources>
+    <string name="tutorials_change_pin_caption">02 – 05 - Change Pin</string>
+
+    <string name="change_pin">Change PIN</string>
+    <string name="change_pin_success">Pin was successfully changed.</string>
+    <string name="change_pin_failed_different">Failed to change pin. Entries are different.</string>
+    <string name="button_change_pin_desc">Change PIN</string>
+
+</resources>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <!-- Base fragment implementation reused in future modules -->
+    <fragment
+        class="com.thalesgroup.mobileprotector.uicomponents.ProvisioningFragment"
+        android:id="@+id/shared_fragment_provisioning"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+</LinearLayout>

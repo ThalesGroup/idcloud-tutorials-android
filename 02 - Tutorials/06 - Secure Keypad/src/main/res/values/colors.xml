@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    // Variant 01
+    <color name="skcScreenBackgroundColor">#FFF9FEFF</color>
+    <color name="skcKeypadGridGradientColorStart_01">#FF545454</color>
+    <color name="skcKeypadGridGradientColorEnd_01">#FF000000</color>
+    <color name="skcButtonGradientColorNormalStart">#FFFFFFFF</color>
+    <color name="skcButtonGradientColorNormalEnd">#FFEFEFF4</color>
+    <color name="skcButtonGradientColorSelectedStart">#FFEFEFF4</color>
+    <color name="skcButtonGradientColorSelectedEnd">#FFEFEFF4</color>
+
+    // Variant 02
+    <color name="skcKeypadFrameColor">#FF7980FF</color>
+    <color name="skcKeypadGridGradientColorStart_02">#FF7980FF</color>
+    <color name="skcKeypadGridGradientColorEnd_02">#FF7980FF</color>
+
+    // Variant 03
+    <color name="skcLabelColor">#FF000000</color>
+    <color name="skcInputFieldBackgroundColorFocused">#FF7980FF</color>
+</resources>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tutorials_oob_messaging_caption">03 – 03 - OOB Messaging</string>
+
+    <!--Server Messages-->
+    <string name="message_subject_authentication">Please authenticate to login to the tutorial site.</string>
+    <string name="message_subject_transaction">Please approve the transaction of $%amount to %beneficiary</string>
+    <string name="message_not_found">Missing translation.</string>
+
+    <string name="oob_listener_not_set">"Oob listener is not set."</string>
+    <string name="loading_fetch">"Fetching…"</string>
+    <string name="loading_sending">"Sending…"</string>
+
+    <string name="btn_fetch_message">"Fetch message"</string>
+    <string name="label_messaging">Messaging</string>
+
+    <string name="push_approve_qeustion">"Incoming message"</string>
+    <string name="push_approve_qeustion_approve">"Approve"</string>
+    <string name="push_approve_qeustion_deny">"Deny"</string>
+
+
+</resources>

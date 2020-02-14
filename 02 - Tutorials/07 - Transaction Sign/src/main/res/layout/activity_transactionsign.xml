@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!--
+    Provisioning fragment is reused from 01 - 02 Provisioning
+    Implemented in com.thalesgroup.mobileprotector.gettingstarted.ProvisioningActivity
+    -->
+    <fragment
+        android:id="@+id/shared_fragment_provisioning"
+        class="com.thalesgroup.mobileprotector.uicomponents.ProvisioningFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="@string/label_one_time_password"
+        android:textSize="30sp" />
+
+    <EditText
+        android:id="@+id/activity_transactionsign_edit_amount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:padding="10dp"
+        android:gravity="center"
+        android:hint="@string/tutorials_transaction_sign_amount"
+        android:inputType="numberDecimal"
+        android:importantForAutofill="no" />
+
+    <EditText
+        android:id="@+id/activity_transactionsign_edit_beneficiary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:padding="10dp"
+        android:gravity="center"
+        android:hint="@string/tutorials_transaction_sign_beneficiary"
+        android:inputType="text"
+        android:importantForAutofill="no" />
+
+    <ImageButton
+        android:id="@+id/activity_transactionsign_btn_generate_otp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        android:background="@drawable/otp_button"
+        android:contentDescription="@string/button_verify_otp_desc" />
+
+    <!--
+    Result fragment is reused from 01 - 03 OTP
+    Implemented in com.thalesgroup.mobileprotector.gettingstarted.OtpActivity
+    -->
+    <fragment
+        android:id="@+id/shared_fragment_result"
+        class="com.thalesgroup.mobileprotector.uicomponents.ResultFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+</LinearLayout>

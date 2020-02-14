@@ -1,0 +1,21 @@
+<resources>
+    <string name="tutorials_biometric_id_caption">02 – 03 - Biometric Id</string>
+
+    <string name="fingerprint_detection_error">"Error during detection user Fingerprint."</string>
+    <string name="face_detection_error">"Error during detection user Face."</string>
+
+    <string name="protector_face_id_enroll">Enroll</string>
+    <string name="protector_face_id_unenroll">Unenroll</string>
+
+    <string name="protector_face_id_enroll_success">Face successfully enrolled.</string>
+    <string name="protector_face_id_enroll_failed">Failed to enroll face.</string>
+
+    <string name="protector_face_id_unenroll_success">Face successfully un-enrolled.</string>
+
+    <string name="ui_label_generate_otp_alone">Generate OTP</string>
+    <string name="ui_label_verify_finger">Verify fingerprint to continue</string>
+    <string name="ui_label_touch_sensor">Touch sensor</string>
+    <string name="ui_label_failed_attempts">Failed attempts:</string>
+    <string name="ui_button_use_pin">USE PIN</string>
+    <string name="ui_button_cancel">CANCEL</string>
+</resources>

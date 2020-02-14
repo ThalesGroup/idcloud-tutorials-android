@@ -1,0 +1,7 @@
+<resources>
+    <string name="tutorials_in_band_verification_caption">02 – 04 - In Band Verification</string>
+
+    <string name="button_verify_otp_desc">Verify OTP</string>
+    <string name="loading_verifying">Verifying…</string>
+
+</resources>

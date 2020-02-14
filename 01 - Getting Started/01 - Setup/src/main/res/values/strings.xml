@@ -1,0 +1,5 @@
+<resources>
+    <string name="gettingstarted_setup_caption">01 – 01 - Setup</string>
+
+    <string name="setup_successful">Mobile Protector SDK setup successful</string>
+</resources>

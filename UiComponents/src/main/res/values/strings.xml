@@ -1,0 +1,15 @@
+<resources>
+    <!--Provision Fragment-->
+    <string name="provision_fragment_title">Provisioning</string>
+    <string name="provision_fragment_btn_remove_token">Remove Token</string>
+    <string name="provision_fragment_btn_provision">Provision</string>
+    <string name="provision_fragment_btn_provision_using_qr">Provision using Qr Code</string>
+    <string name="provision_fragment_hint_reg_code">Enter Registration Code</string>
+    <string name="provision_fragment_hint_user_id">Enter User ID</string>
+
+    <string name="remove_token_question" >"Are you sure to remove the provisioned token?"</string>
+    <string name="remove_token_question_confirm" >"Remove"</string>
+    <string name="remove_token_question_cancel" >"Cancel"</string>
+
+    <string name="empty_user_id_or_reg_code">"User ID and Registration Code cannot be empty."</string>
+</resources>

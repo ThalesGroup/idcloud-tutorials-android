@@ -1,0 +1,19 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application
+        android:allowBackup="true"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        android:label="02 - Tutorials"
+        android:icon="@mipmap/ic_tutorials"
+        android:roundIcon="@mipmap/ic_tutorials">
+        <activity
+            android:name="com.thalesgroup.mobileprotector.tutorials.QrCodeBasicActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>

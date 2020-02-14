@@ -1,0 +1,7 @@
+<resources>
+    <string name="gettingstarted_otp_caption">01 – 03 - OTP</string>
+
+    <string name="missing_result_fragment">"Activity does not contain results fragment."</string>
+    <string name="label_one_time_password">One Time Password</string>
+    <string name="button_otp_desc">Generate OTP</string>
+</resources>

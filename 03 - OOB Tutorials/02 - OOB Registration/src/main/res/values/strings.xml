@@ -1,0 +1,13 @@
+<resources>
+    <string name="tutorials_oob_registration_caption">03 – 02 - OOB Registration</string>
+    <string name="notification_caption">03 - Oob Tutorials</string>
+
+    <string name="push_approve_question">Incoming message</string>
+
+    <string name="push_fcm_channel_description">MSP Frame Communication Channel</string>
+    <string name="push_fcm_channel_name">MSP Frame Channel</string>
+    <string name="push_fcm_channel_id">default</string>
+
+    <string name="loading_registering">Registering…</string>
+    <string name="loading_unregistering">Un-registering…</string>
+</resources>
