@@ -46,7 +46,7 @@ class OobSetupConfig {
      */
     @NonNull
     static DeviceFingerprintSource getDeviceFingerPrintSource() {
-        return new DeviceFingerprintSource("".getBytes(), DeviceFingerprintSource.Type.SOFT);
+        return new DeviceFingerprintSource("com.gemalto.ezio.mobile.EzioMobileExamples".getBytes(), DeviceFingerprintSource.Type.SOFT);
     }
 
     /**

@@ -30,6 +30,7 @@ package com.thalesgroup.mobileprotector.commonutils.ui;
 import android.Manifest;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.PermissionChecker;
@@ -51,32 +52,29 @@ public abstract class AbstractBaseActivityPermission extends AppCompatActivity {
     private final static int PERMISSION_REQUEST_CODE = 1;
     protected AppState mAppState = AppState.LOADING;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @SuppressWarnings("deprecation")
     protected boolean checkMandatoryPermissions() {
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                return requestPermission(Manifest.permission.READ_PHONE_STATE,
-                                         Manifest.permission.CAMERA,
-                                         Manifest.permission.INTERNET,
-                                         Manifest.permission.USE_BIOMETRIC);
-            }
-            else{
-                return requestPermission(Manifest.permission.READ_PHONE_STATE,
-                                         Manifest.permission.CAMERA,
-                                         Manifest.permission.INTERNET,
-                                         Manifest.permission.USE_FINGERPRINT);
-            }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+            return requestPermission(Manifest.permission.CAMERA,
+                    Manifest.permission.INTERNET,
+                    Manifest.permission.USE_BIOMETRIC);
+
+        return requestPermission(Manifest.permission.CAMERA,
+                Manifest.permission.INTERNET,
+                Manifest.permission.USE_FINGERPRINT);
     }
 
 
-    private boolean requestPermission(final String... permissions) {
+    private boolean requestPermission(String... permissions) {
         // Old SDK version does not have dynamic permissions.
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
             return true;
-        }
 
-        final List<String> permissionsToCheck = new ArrayList<>();
+        List<String> permissionsToCheck = new ArrayList<>();
 
-        for (final String permission : permissions) {
+        for (String permission : permissions) {
             if (ContextCompat.checkSelfPermission(this, permission) != PermissionChecker.PERMISSION_GRANTED) {
                 // Should we show an explanation?
                 if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
@@ -91,17 +89,19 @@ public abstract class AbstractBaseActivityPermission extends AppCompatActivity {
         }
 
         if (!permissionsToCheck.isEmpty()) {
-            ActivityCompat
-                    .requestPermissions(this, permissionsToCheck.toArray(new String[permissionsToCheck.size()]), PERMISSION_REQUEST_CODE);
+            ActivityCompat.requestPermissions(this,
+                    permissionsToCheck.toArray(new String[permissionsToCheck.size()]), PERMISSION_REQUEST_CODE);
         }
 
         return permissionsToCheck.isEmpty();
     }
 
     @Override
-    public void onRequestPermissionsResult(final int requestCode,
-                                           @NonNull final String[] permissions,
-                                           @NonNull final int[] grantResults) {
+    public void onRequestPermissionsResult(
+            int requestCode,
+            @NonNull String[] permissions,
+            @NonNull int[] grantResults
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         boolean allGranted = true;

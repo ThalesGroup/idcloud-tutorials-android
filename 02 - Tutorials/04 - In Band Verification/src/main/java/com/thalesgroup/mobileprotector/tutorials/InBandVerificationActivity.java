@@ -55,7 +55,7 @@ public class InBandVerificationActivity extends BiometricIdActivity {
         setContentView(R.layout.activity_inbandverification);
 
         // Initialise Mobile Protector SDK.
-        AdvancedSetupLogic.setup(false);
+        AdvancedSetupLogic.setup();
     }
 
     @Override
@@ -89,7 +89,6 @@ public class InBandVerificationActivity extends BiometricIdActivity {
     }
 
     //endregion
-
 
     //region User Interface
 

@@ -70,9 +70,11 @@ public class InBandVerificationLogic extends AbstractBaseLogic {
      * @param authInput         Selected authentication input.
      * @param completionHandler Completion handler triggered in UI thread once operation is done.
      */
-    public static void verifyWithToken(final SoftOathToken token,
-                                       final AuthInput authInput,
-                                       final GenericOtpHandler completionHandler) {
+    public static void verifyWithToken(
+            SoftOathToken token,
+            AuthInput authInput,
+            GenericOtpHandler completionHandler
+    ) {
         try {
             verifyWithToken(token.getName(), OtpLogic.generateOtp(token, authInput), completionHandler);
         } catch (final IdpException exception) {
@@ -87,37 +89,41 @@ public class InBandVerificationLogic extends AbstractBaseLogic {
      * @param otpValue          Generated OTP.
      * @param completionHandler Callback to the application
      */
-    private static void verifyWithToken(final String tokenName,
-                                        final OtpValue otpValue,
-                                        final GenericOtpHandler completionHandler) {
+    private static void verifyWithToken(
+            String tokenName,
+            OtpValue otpValue,
+            final GenericOtpHandler completionHandler
+    ) {
 
-        final String toHash = String.format("%s:%s",
+        String toHash = String.format("%s:%s",
                 InBandVerificationConfig.getBasicAuthenticationUsername(),
                 InBandVerificationConfig.getBasicAuthenticationPassword());
-        final String hash = Base64.encodeToString(toHash.getBytes(StandardCharsets.UTF_8), Base64.DEFAULT);
-        final String body = String.format(XML_TEMPLATE_AUTH, tokenName, otpValue.getOtp().toString());
-        final Map<String, String> headers = new HashMap<>();
+        String hash = Base64.encodeToString(toHash.getBytes(StandardCharsets.UTF_8), Base64.DEFAULT);
+        String body = String.format(XML_TEMPLATE_AUTH, tokenName, otpValue.getOtp().toString());
+        Map<String, String> headers = new HashMap<>();
         headers.put("Authorization", String.format("Basic %s", hash));
 
         // We don't need otp any more. Wipe it.
         otpValue.wipe();
 
         ExecutionService.getExecutionService().runOnBackgroudThread(() -> doPostRequest(InBandVerificationConfig.getAuthenticationUrl(),
-                                                                                        "text/xml", headers, body, (success, result) -> {
-                                                                                            final boolean valid = success && result.equalsIgnoreCase("Authentication succeeded");
-                                                                                            completionHandler.onFinished(valid, result, otpValue.getLifespan());
-                                                                                        }));
+                "text/xml", headers, body, (success, result) -> {
+                    boolean valid = success && result.equalsIgnoreCase("Authentication succeeded");
+                    completionHandler.onFinished(valid, result, otpValue.getLifespan());
+                }));
     }
 
-    private static HttpURLConnection createConnection(@NonNull final String hostUrl,
-                                                      @NonNull final String contentType,
-                                                      @NonNull final Map<String, String> headers) throws IOException {
-        final URL url = new URL(hostUrl);
-        final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+    private static HttpURLConnection createConnection(
+            @NonNull String hostUrl,
+            @NonNull String contentType,
+            @NonNull Map<String, String> headers
+    ) throws IOException {
+        URL url = new URL(hostUrl);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
-        for (final Map.Entry<String, String> entry : headers.entrySet()) {
-            final String key = entry.getKey();
-            final String value = entry.getValue();
+        for (Map.Entry<String, String> entry : headers.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
             connection.setRequestProperty(key, value);
         }
 
@@ -131,13 +137,13 @@ public class InBandVerificationLogic extends AbstractBaseLogic {
         return connection;
     }
 
-    private static String convertStreamToString(final InputStream inputStream) throws IOException {
+    private static String convertStreamToString(InputStream inputStream) throws IOException {
         if (inputStream != null) {
-            final Writer writer = new StringWriter();
+            Writer writer = new StringWriter();
 
-            final char[] buffer = new char[1024];
+            char[] buffer = new char[1024];
             try {
-                final Reader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8), 1024);
+                Reader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8), 1024);
                 int numberOfCharacters = reader.read(buffer);
                 while (numberOfCharacters != -1) {
                     writer.write(buffer, 0, numberOfCharacters);
@@ -162,21 +168,23 @@ public class InBandVerificationLogic extends AbstractBaseLogic {
      * @param body        Body.
      * @param callback    Callback back to the application.
      */
-    private static void doPostRequest(@NonNull final String hostUrl,
-                                      @NonNull final String contentType,
-                                      @NonNull final Map<String, String> headers,
-                                      @NonNull final String body,
-                                      @NonNull final GenericHandler callback) {
+    private static void doPostRequest(
+            @NonNull final String hostUrl,
+            @NonNull final String contentType,
+            @NonNull final Map<String, String> headers,
+            @NonNull final String body,
+            @NonNull final GenericHandler callback
+    ) {
         try {
-            final HttpURLConnection connection = createConnection(hostUrl, contentType, headers);
+            HttpURLConnection connection = createConnection(hostUrl, contentType, headers);
 
             try (OutputStreamWriter outputStreamWriter = new OutputStreamWriter(connection.getOutputStream())) {
                 outputStreamWriter.write(body);
                 outputStreamWriter.flush();
             }
 
-            final int statusCode = connection.getResponseCode();
-            final String responseBody; // NOPMD - no reason to turn final local variable in to field
+            int statusCode = connection.getResponseCode();
+            String responseBody; // NOPMD - no reason to turn final local variable in to field
             if (statusCode > 226) {
                 responseBody = "";
             } else {

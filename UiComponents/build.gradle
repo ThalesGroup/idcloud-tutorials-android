@@ -1,23 +1,12 @@
-apply plugin: 'com.android.library'
-
-android {
-    compileSdkVersion 28
-    defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 28
-    }
-    compileOptions {
-        sourceCompatibility = '1.8'
-        targetCompatibility = '1.8'
-    }
-}
+apply plugin: "com.android.library"
+apply from: "${rootDir}/build-android-based.gradle"
 
 dependencies {
 
     // Add common code module
-    api project(':commonutils')
+    api project(":commonutils")
 
     // QR Code Scanner
-    api 'me.dm7.barcodescanner:zxing:1.9'
+    api "me.dm7.barcodescanner:zxing:1.9"
 
 }

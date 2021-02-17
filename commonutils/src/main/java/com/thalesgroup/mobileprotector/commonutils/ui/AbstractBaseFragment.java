@@ -34,6 +34,6 @@ import com.gemalto.idp.mobile.otp.oath.soft.SoftOathToken;
 
 public abstract class AbstractBaseFragment extends Fragment {
 
-    public abstract void updateGui(@Nullable final SoftOathToken token);
+    public abstract void updateGui(@Nullable SoftOathToken token);
 
 }

@@ -52,7 +52,7 @@ public class QrCodeBasicActivity extends AdvancedSetupActivity implements QrCode
         setContentView(R.layout.activity_qrcodebasic);
 
         // Initialise Mobile Protector SDK.
-        AdvancedSetupLogic.setup(false);
+        AdvancedSetupLogic.setup();
     }
 
     @Override

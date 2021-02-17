@@ -1,18 +1,6 @@
-apply plugin: 'com.android.library'
-
-android {
-    compileSdkVersion 28
-    defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 28
-    }
-    compileOptions {
-        sourceCompatibility = '1.8'
-        targetCompatibility = '1.8'
-    }
-}
+apply plugin: "com.android.library"
+apply from: "${rootDir}/build-android-based.gradle"
 
 dependencies {
-    api project(':01 - 03 - OTP')
-    api project(':FaceUISDK')
+    api project(":01 - 03 - OTP")
 }

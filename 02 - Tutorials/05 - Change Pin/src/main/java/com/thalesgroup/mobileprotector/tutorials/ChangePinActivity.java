@@ -33,10 +33,10 @@ import android.widget.ImageButton;
 import com.gemalto.idp.mobile.authentication.mode.pin.PinAuthInput;
 import com.gemalto.idp.mobile.otp.oath.soft.SoftOathToken;
 import com.gemalto.idp.mobile.ui.UiModule;
-import com.gemalto.idp.mobile.ui.secureinput.SecureInputBuilderV2;
+import com.gemalto.idp.mobile.ui.secureinput.SecureInputBuilder;
 import com.gemalto.idp.mobile.ui.secureinput.SecureInputService;
 import com.gemalto.idp.mobile.ui.secureinput.SecureInputUi;
-import com.gemalto.idp.mobile.ui.secureinput.SecurePinpadListenerV2;
+import com.gemalto.idp.mobile.ui.secureinput.SecureKeypadListener;
 import com.thalesgroup.mobileprotector.commonutils.callbacks.AuthPinsHandler;
 import com.thalesgroup.mobileprotector.commonutils.helpers.Lifespan;
 import com.thalesgroup.mobileprotector.gettingstarted.provisioning.ProvisioningLogic;
@@ -54,6 +54,7 @@ public class ChangePinActivity extends InBandVerificationActivity {
 
     private ImageButton mBtnChangePin;
     private static final String DIALOG_TAG_CHANGE_PIN = "DIALOG_TAG_CHANGE_PIN";
+    private SecureInputBuilder builder;
 
     //endregion
 
@@ -65,7 +66,7 @@ public class ChangePinActivity extends InBandVerificationActivity {
         setContentView(R.layout.activity_changepin);
 
         // Initialise Mobile Protector SDK.
-        AdvancedSetupLogic.setup(false);
+        AdvancedSetupLogic.setup();
     }
 
     @Override
@@ -102,8 +103,8 @@ public class ChangePinActivity extends InBandVerificationActivity {
     //region Shared
 
     protected void userPins(final AuthPinsHandler callback) {
-        final SecureInputBuilderV2 builder = SecureInputService.create(UiModule.create()).getSecureInputBuilderV2();
-        final SecureInputUi secureInputUi = builder.buildPinpad(false, true, true, new SecurePinpadListenerV2() {
+        builder = SecureInputService.create(UiModule.create()).getSecureInputBuilder();
+        final SecureInputUi secureInputUi = builder.buildKeypad(false, true, true, new SecureKeypadListener() {
             @Override
             public void onKeyPressedCountChanged(final int count, final int inputField) {
                 // Handle on key pressed if needed.
@@ -129,6 +130,9 @@ public class ChangePinActivity extends InBandVerificationActivity {
                 dialogFragmentHide();
 
                 callback.onPinProvided(pinAuthInput, pinAuthInput1);
+
+                // Wipe the builder
+                builder.wipe();
             }
 
             @Override
@@ -137,11 +141,11 @@ public class ChangePinActivity extends InBandVerificationActivity {
 
                 // Notify user about possible error.
                 displayMessageDialog(errorMessage);
+
+                // Wipe the builder
+                builder.wipe();
             }
         });
-
-        // Wipe builder.
-        builder.wipe();
 
         // Display dialog using common method.
         dialogFragmentShow(secureInputUi.getDialogFragment(), DIALOG_TAG_CHANGE_PIN, false);

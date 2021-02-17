@@ -27,12 +27,14 @@
 
 package com.thalesgroup.mobileprotector.oobtutorials.oobsetup;
 
+import com.gemalto.idp.mobile.core.ApplicationContextHolder;
 import com.gemalto.idp.mobile.core.IdpConfiguration;
 import com.gemalto.idp.mobile.core.IdpCore;
 import com.gemalto.idp.mobile.core.passwordmanager.PasswordManagerException;
 import com.gemalto.idp.mobile.msp.MspConfiguration;
 import com.gemalto.idp.mobile.oob.OobConfiguration;
 import com.gemalto.idp.mobile.otp.OtpConfiguration;
+import com.thalesgroup.gemalto.securelog.SecureLogConfig;
 import com.thalesgroup.mobileprotector.commonutils.helpers.AbstractBaseLogic;
 import com.thalesgroup.mobileprotector.tutorials.advancedsetup.AdvancedSetupConfig;
 
@@ -44,8 +46,12 @@ public class OobSetupLogic extends AbstractBaseLogic {
     /**
      * Setups Mobile Protector SDK.
      */
-    public static void setup()  {
+    public static void setup() {
         if (!IdpCore.isConfigured()) {
+            IdpCore.configureSecureLog(new SecureLogConfig.Builder(ApplicationContextHolder.getContext())
+                    .publicKey(AdvancedSetupConfig.CFG_SLOG_MODULUS, AdvancedSetupConfig.CFG_SLOG_EXPONENT)
+                    .build());
+
             IdpCore.configure(AdvancedSetupConfig.getActivationCode(), getModuleConfigurations());
 
             // Login so we can use secure storage, OOB etc..
@@ -85,7 +91,7 @@ public class OobSetupLogic extends AbstractBaseLogic {
         }
 
         // Return all configurations.
-        return new IdpConfiguration[]{otpConfiguration, oobConfiguration, mspBuilder.build()};
+        return new IdpConfiguration[]{ otpConfiguration, oobConfiguration, mspBuilder.build() };
     }
 
 }

@@ -61,7 +61,7 @@ public class TransactionSignActivity extends SecureKeypadActivity {
         setContentView(R.layout.activity_transactionsign);
 
         // Initialise Mobile Protector SDK.
-        AdvancedSetupLogic.setup(false);
+        AdvancedSetupLogic.setup();
     }
 
     @Override

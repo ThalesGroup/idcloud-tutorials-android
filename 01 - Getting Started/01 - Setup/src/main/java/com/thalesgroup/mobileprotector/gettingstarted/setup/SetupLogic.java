@@ -27,9 +27,11 @@
 
 package com.thalesgroup.mobileprotector.gettingstarted.setup;
 
+import com.gemalto.idp.mobile.core.ApplicationContextHolder;
 import com.gemalto.idp.mobile.core.IdpCore;
 import com.gemalto.idp.mobile.core.passwordmanager.PasswordManagerException;
 import com.gemalto.idp.mobile.otp.OtpConfiguration;
+import com.thalesgroup.gemalto.securelog.SecureLogConfig;
 import com.thalesgroup.mobileprotector.commonutils.helpers.AbstractBaseLogic;
 
 /**
@@ -44,14 +46,18 @@ public class SetupLogic extends AbstractBaseLogic {
 
         // Make sure that configuration method is not called multiple times by checking isConfigured method.
         if (!IdpCore.isConfigured()) {
-            final OtpConfiguration otpConfiguration = new OtpConfiguration.Builder()
+            IdpCore.configureSecureLog(new SecureLogConfig.Builder(ApplicationContextHolder.getContext())
+                    .publicKey(SetupConfig.CFG_SLOG_MODULUS, SetupConfig.CFG_SLOG_EXPONENT)
+                    .build());
+
+            OtpConfiguration otpConfiguration = new OtpConfiguration.Builder()
                     .setRootPolicy(OtpConfiguration.TokenRootPolicy.IGNORE).build();
             IdpCore.configure(SetupConfig.getActivationCode(), otpConfiguration);
 
             // Login to PasswordManager
             try {
                 IdpCore.getInstance().getPasswordManager().login();
-            } catch (final PasswordManagerException exception) {
+            } catch (PasswordManagerException exception) {
                 // Usually it means, that someone try to login with different password than last time.
                 // Password was changes etc..
                 throw new IllegalStateException(exception);

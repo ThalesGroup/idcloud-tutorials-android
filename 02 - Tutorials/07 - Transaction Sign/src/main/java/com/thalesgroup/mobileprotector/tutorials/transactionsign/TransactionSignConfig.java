@@ -27,8 +27,35 @@
 
 package com.thalesgroup.mobileprotector.tutorials.transactionsign;
 
+/**
+ * Configuration for user authentication/OTP verification.
+ */
 class TransactionSignConfig {
 
-    // No specific config needed in this part.
+    /**
+     * Gets authentication URL where the generated OTP is validated.
+     *
+     * @return Authentication URL.
+     */
+    static String getAuthenticationUrl() {
+        return "";
+    }
 
+    /**
+     * Gets the username used to authenticate on the authentication URL.
+     *
+     * @return Username.
+     */
+    static String getBasicAuthenticationUsername() {
+        return "";
+    }
+
+    /**
+     * Gets the password used to authenticate on the authentication URL.
+     *
+     * @return Password.
+     */
+    static String getBasicAuthenticationPassword() {
+        return "";
+    }
 }

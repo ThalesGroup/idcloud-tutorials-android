@@ -27,30 +27,20 @@
 
 package com.thalesgroup.mobileprotector.tutorials;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Switch;
 
 import com.gemalto.idp.mobile.authentication.AuthService;
 import com.gemalto.idp.mobile.authentication.AuthenticationModule;
 import com.gemalto.idp.mobile.authentication.mode.biofingerprint.BioFingerprintAuthService;
-import com.gemalto.idp.mobile.authentication.mode.face.FaceAuthService;
-import com.gemalto.idp.mobile.authentication.mode.face.FaceAuthStatus;
-import com.gemalto.idp.mobile.authentication.mode.face.FaceAuthUnenrollerCallback;
-import com.gemalto.idp.mobile.authentication.mode.face.ui.EnrollmentCallback;
 import com.gemalto.idp.mobile.core.IdpException;
 import com.gemalto.idp.mobile.otp.oath.OathToken;
 import com.gemalto.idp.mobile.otp.oath.soft.SoftOathToken;
 import com.thalesgroup.mobileprotector.commonutils.callbacks.AuthInputHandler;
 import com.thalesgroup.mobileprotector.commonutils.helpers.TokenStatus;
 import com.thalesgroup.mobileprotector.gettingstarted.provisioning.ProvisioningLogic;
-import com.thalesgroup.mobileprotector.tutorials.advancedsetup.AdvancedSetupConfig;
 import com.thalesgroup.mobileprotector.tutorials.advancedsetup.AdvancedSetupLogic;
 import com.thalesgroup.mobileprotector.tutorials.biometricid.BiometricIdLogic;
 import com.thalesgroup.mobileprotector.tutorials.biometricid.R;
@@ -65,21 +55,6 @@ public class BiometricIdActivity extends QrCodeBasicActivity {
     private ImageButton mBtnGenerateOtpTouch;
     private Switch mSwitchTouch;
 
-    private ImageButton mBtnGenerateOtpFace;
-    private Switch mSwitchFace;
-    private Button mBtnEnrollFace;
-
-    // Listen to Face Id status changes.
-    private final BroadcastReceiver mFaceIdStateReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(final Context context, final Intent intent) {
-            updateGui();
-        }
-    };
-
-    private static final String DIALOG_FACE_ID_ENROLL = "DIALOG_FACE_ID_ENROLL";
-    private static final String DIALOG_FACE_ID_VERIFY = "DIALOG_FACE_ID_VERIFY";
-
     //endregion
 
     //region AbstractBaseActivity
@@ -90,7 +65,7 @@ public class BiometricIdActivity extends QrCodeBasicActivity {
         setContentView(R.layout.activity_biometricid);
 
         // Initialise Mobile Protector SDK.
-        AdvancedSetupLogic.setup(true);
+        AdvancedSetupLogic.setup();
     }
 
     @Override
@@ -114,19 +89,6 @@ public class BiometricIdActivity extends QrCodeBasicActivity {
             mSwitchTouch.setOnClickListener(sender -> onSwitchPressedTouchId());
         }
 
-        mBtnGenerateOtpFace = findViewById(R.id.activity_biometricid_btn_generate_otp_face);
-        if (mBtnGenerateOtpFace != null) {
-            mBtnGenerateOtpFace.setOnClickListener(sender -> onButtonPressedGenerateOTPFace());
-        }
-        mSwitchFace = findViewById(R.id.activity_biometricid_switch_generate_otp_face);
-        if (mSwitchFace != null) {
-            mSwitchFace.setOnClickListener(sender -> onSwitchPressedFaceId());
-        }
-
-        mBtnEnrollFace = findViewById(R.id.activity_biometricid_btn_enroll_face);
-        if (mBtnEnrollFace != null) {
-            mBtnEnrollFace.setOnClickListener(sender -> onButtonPressedEnrollFaceId());
-        }
     }
 
     @Nullable
@@ -135,27 +97,11 @@ public class BiometricIdActivity extends QrCodeBasicActivity {
         // Get stored token
         final SoftOathToken token = super.updateGui();
         final TokenStatus tokenStatus = BiometricIdLogic.getTokenStatus();
-        final AdvancedSetupConfig.ProtectorFaceIdState faceAuthStatus = AdvancedSetupLogic.getFaceAuthStatus();
 
         if (mBtnGenerateOtpTouch != null && mSwitchTouch != null) {
             mBtnGenerateOtpTouch.setEnabled(tokenStatus.isTouchEnabled());
             mSwitchTouch.setEnabled(tokenStatus.isTouchSupported());
             mSwitchTouch.setChecked(tokenStatus.isTouchEnabled());
-        }
-
-        if (mBtnGenerateOtpFace != null && mSwitchFace != null && mBtnEnrollFace != null) {
-            mBtnGenerateOtpFace.setEnabled(tokenStatus.isProtectorFaceEnabled());
-            mSwitchFace.setEnabled(tokenStatus.isProtectorFaceSupported());
-            mSwitchFace.setChecked(tokenStatus.isProtectorFaceEnabled());
-
-            mBtnEnrollFace.setEnabled(
-                    faceAuthStatus == AdvancedSetupConfig.ProtectorFaceIdState.ProtectorFaceIdStateReadyToUse ||
-                            faceAuthStatus == AdvancedSetupConfig.ProtectorFaceIdState.ProtectorFaceIdStateInitialized);
-            if (faceAuthStatus == AdvancedSetupConfig.ProtectorFaceIdState.ProtectorFaceIdStateReadyToUse) {
-                mBtnEnrollFace.setText(R.string.protector_face_id_unenroll);
-            } else {
-                mBtnEnrollFace.setText(R.string.protector_face_id_enroll);
-            }
         }
 
         return token;
@@ -168,19 +114,12 @@ public class BiometricIdActivity extends QrCodeBasicActivity {
     @Override
     public void onResume() {
         super.onResume();
-
-        // Register listener for Protector Face Id State change (licensing etc...)
-        final IntentFilter filter = new IntentFilter();
-        filter.addAction(AdvancedSetupLogic.NOTIFICATION_ID_FACE_STATE_CHANGED_ACTION);
-        registerReceiver(mFaceIdStateReceiver, filter);
     }
 
     @Override
     public void onPause() {
         super.onPause();
 
-        // Unregister notification listener on pause.
-        unregisterReceiver(mFaceIdStateReceiver);
     }
 
     //endregion
@@ -259,60 +198,6 @@ public class BiometricIdActivity extends QrCodeBasicActivity {
         }
     }
 
-    /**
-     * Enrolls the face for OTP generation.
-     */
-    private void enrollFace() {
-        dialogFragmentShow(BiometricIdLogic.enrollFaceId(new EnrollmentCallback() {
-            @Override
-            public void onEnrollmentSuccess() {
-                displayMessageDialog(R.string.protector_face_id_enroll_success);
-                dialogFragmentHide();
-                AdvancedSetupLogic.updateProtectorFaceIdStatus();
-            }
-
-            @Override
-            public void onCancel() {
-                dialogFragmentHide();
-                AdvancedSetupLogic.updateProtectorFaceIdStatus();
-            }
-
-            @Override
-            public void onEnrollmentFailed(final FaceAuthStatus status) {
-                dialogFragmentHide();
-                displayMessageDialog(R.string.protector_face_id_enroll_failed);
-                AdvancedSetupLogic.updateProtectorFaceIdStatus();
-            }
-
-            @Override
-            public void onEnrollmentRetry(final FaceAuthStatus status, final int remainingRetries) {
-                AdvancedSetupLogic.updateProtectorFaceIdStatus();
-            }
-
-            @Override
-            public void onError(final IdpException exception) {
-                dialogFragmentHide();
-                displayMessageDialog(exception);
-                AdvancedSetupLogic.updateProtectorFaceIdStatus();
-            }
-        }), DIALOG_FACE_ID_ENROLL, false);
-    }
-
-    private void unenrollFace() {
-        BiometricIdLogic.unenroll(new FaceAuthUnenrollerCallback() {
-            @Override
-            public void onUnenrollFinish(final FaceAuthStatus faceAuthStatus) {
-                displayMessageDialog(R.string.protector_face_id_unenroll_success);
-                AdvancedSetupLogic.updateProtectorFaceIdStatus();
-            }
-
-            @Override
-            public void onUnenrollError(final IdpException exception) {
-                displayMessageDialog(exception);
-            }
-        });
-    }
-
     //endregion
 
     //region User Interface
@@ -333,23 +218,7 @@ public class BiometricIdActivity extends QrCodeBasicActivity {
         });
     }
 
-    private void onButtonPressedGenerateOTPFace() {
-        // Get currently provisioned token.
-        final SoftOathToken token = ProvisioningLogic.getToken();
-        if (token == null) {
-            throw new IllegalStateException(getString(R.string.token_not_provisioned));
-        }
-
-        dialogFragmentShow(BiometricIdLogic.getUserFaceId(token, (authInput, error) -> {
-            dialogFragmentHide();
-            if (authInput == null) {
-                displayMessageDialog(error);
-            } else {
-                generateAndDisplayOtp(token, authInput);
-            }
-        }), DIALOG_FACE_ID_VERIFY, false);
-    }
-
+    @SuppressWarnings("deprecation")
     private void onSwitchPressedTouchId() {
         // Toggle button back, because cancel operation is not handled and success will reload UI.
         mSwitchTouch.setChecked(!mSwitchTouch.isChecked());
@@ -358,21 +227,6 @@ public class BiometricIdActivity extends QrCodeBasicActivity {
                 BioFingerprintAuthService.create(AuthenticationModule.create()));
     }
 
-    private void onSwitchPressedFaceId() {
-        // Toggle button back, because cancel operation is not handled and success will reload UI.
-        mSwitchFace.setChecked(!mSwitchFace.isChecked());
-
-        enableOrDisableAuthMode(BiometricIdLogic.getTokenStatus().isProtectorFaceEnabled(),
-                FaceAuthService.create(AuthenticationModule.create()));
-    }
-
-    private void onButtonPressedEnrollFaceId() {
-        if (AdvancedSetupLogic.getFaceAuthStatus() == AdvancedSetupConfig.ProtectorFaceIdState.ProtectorFaceIdStateInitialized) {
-            enrollFace();
-        } else {
-            unenrollFace();
-        }
-    }
 
     //endregion
 

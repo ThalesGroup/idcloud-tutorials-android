@@ -1,21 +1,10 @@
-apply plugin: 'com.android.library'
-
-android {
-    compileSdkVersion 28
-    defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 28
-    }
-    compileOptions {
-        sourceCompatibility = '1.8'
-        targetCompatibility = '1.8'
-    }
-}
+apply plugin: "com.android.library"
+apply from: "${rootDir}/build-android-based.gradle"
 
 dependencies {
-    api project(':03 - 01 - OOB Setup')
+    api project(":03 - 01 - OOB Setup")
 
     // FCM dependencies, depending on your use-case
-    api 'com.google.firebase:firebase-messaging:17.3.0'
-    api 'com.google.firebase:firebase-core:16.0.1'
+    api "com.google.firebase:firebase-messaging:17.3.0"
+    api "com.google.firebase:firebase-core:16.0.1"
 }

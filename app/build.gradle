@@ -1,33 +1,27 @@
-apply plugin: 'com.android.application'
-apply plugin: 'com.google.gms.google-services'
+apply plugin: "com.android.application"
+apply plugin: "com.google.gms.google-services"
+apply from: "${rootDir}/build-android-based.gradle"
 
 android {
-    compileSdkVersion 28
     defaultConfig {
         applicationId "com.thalesgroup.mobileprotector"
-        minSdkVersion 21
-        targetSdkVersion 28
+
         versionCode 1
         versionName "1.0-RC1"
         multiDexEnabled true
     }
-    compileOptions {
-        sourceCompatibility = '1.8'
-        targetCompatibility = '1.8'
-    }
+
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
 
     flavorDimensions "version"
     productFlavors {
 
-        // ----------------
-        // Getting started
-        // ----------------
+        //region Getting started
         setup {
             dimension "version"
             applicationId "com.thalesgroup.mobileprotector.gettingstarted"
@@ -40,10 +34,9 @@ android {
             dimension "version"
             applicationId "com.thalesgroup.mobileprotector.gettingstarted"
         }
+        //endregion
 
-        // ----------------
-        // Tutorials
-        // ----------------
+        //region Tutorials
         advancedsetup {
             dimension "version"
             applicationId "com.thalesgroup.mobileprotector.tutorials"
@@ -72,10 +65,9 @@ android {
             dimension "version"
             applicationId "com.thalesgroup.mobileprotector.tutorials"
         }
+        //endregion
 
-        // ----------------
-        // OOB Tutorials
-        // ----------------
+        //region OOB Tutorials
         oobsetup {
             dimension "version"
             applicationId "com.thalesgroup.mobileprotector.oobtutorials"
@@ -88,23 +80,12 @@ android {
             dimension "version"
             applicationId "com.thalesgroup.mobileprotector.oobtutorials"
         }
+        //endregion
     }
 
     sourceSets {
-        // Add native Mobile Protector SDK libraries.
-        // Tested with Mobile Protector SDK 4.8.1
-        main {
-            release {
-                jniLibs.srcDirs = ['../libs/release/']
-            }
-            debug {
-                jniLibs.srcDirs = ['../libs/debug/']
-            }
-        }
 
-        // ----------------
-        // Getting started
-        // ----------------
+        //region Getting started
         setup {
             manifest.srcFile "../01 - Getting Started/01 - Setup/manifest/AndroidManifest.xml"
         }
@@ -114,11 +95,9 @@ android {
         otp {
             manifest.srcFile "../01 - Getting Started/03 - OTP/manifest/AndroidManifest.xml"
         }
+        //endregion
 
-        // ----------------
-        // Tutorials
-        // ----------------
-
+        //region Tutorials
         advancedsetup {
             manifest.srcFile "../02 - Tutorials/01 - Advanced Setup/manifest/AndroidManifest.xml"
         }
@@ -140,11 +119,9 @@ android {
         transactionsign {
             manifest.srcFile "../02 - Tutorials/07 - Transaction Sign/manifest/AndroidManifest.xml"
         }
+        //endregion
 
-
-        // ----------------
-        // OOB Tutorials
-        // ----------------
+        //region OOB Tutorials
         oobsetup {
             manifest.srcFile "../03 - OOB Tutorials/01 - OOB Setup/manifest/AndroidManifest.xml"
         }
@@ -154,49 +131,55 @@ android {
         oobmessaging {
             manifest.srcFile "../03 - OOB Tutorials/03 - OOB Messaging/manifest/AndroidManifest.xml"
         }
+        //endregion
     }
 }
 
 dependencies {
     // Add common code module
-    implementation project(':commonutils')
-    implementation project(':FaceUISDK')
+    implementation project(":commonutils")
 
-    // Getting Started
-    implementation project(':01 - 01 - Setup')
-    implementation project(':01 - 02 - Provisioning')
-    implementation project(':01 - 03 - OTP')
+    //region Android components
+    implementation "com.android.support:appcompat-v7:${propAndroidSupport}"
+    implementation "com.android.support.constraint:constraint-layout:2.0.4"
+    implementation "com.android.support:support-v4:${propAndroidSupport}"
+    //endregion
 
-    // Tutorials
-    implementation project(':02 - 01 - Advanced Setup')
-    implementation project(':02 - 02 - QR Code Basic')
-    implementation project(':02 - 03 - Biometric Id')
-    implementation project(':02 - 04 - In Band Verification')
-    implementation project(':02 - 05 - Change Pin')
-    implementation project(':02 - 06 - Secure Keypad')
-    implementation project(':02 - 07 - Transaction Sign')
+    //region Getting Started
+    implementation project(":01 - 01 - Setup")
+    implementation project(":01 - 02 - Provisioning")
+    implementation project(":01 - 03 - OTP")
+    //endregion
 
-    // OOB Tutorials
-    implementation project(':03 - 01 - OOB Setup')
-    implementation project(':03 - 02 - OOB Registration')
-    implementation project(':03 - 03 - OOB Messaging')
+    //region Tutorials
+    implementation project(":02 - 01 - Advanced Setup")
+    implementation project(":02 - 02 - QR Code Basic")
+    implementation project(":02 - 03 - Biometric Id")
+    implementation project(":02 - 04 - In Band Verification")
+    implementation project(":02 - 05 - Change Pin")
+    implementation project(":02 - 06 - Secure Keypad")
+    implementation project(":02 - 07 - Transaction Sign")
+    //endregion
 
-    // Android components
-    implementation 'com.android.support:appcompat-v7:28.0.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
-    implementation 'com.android.support:support-v4:28.0.0'
+    //region OOB Tutorials
+    implementation project(":03 - 01 - OOB Setup")
+    implementation project(":03 - 02 - OOB Registration")
+    implementation project(":03 - 03 - OOB Messaging")
+    //endregion
 
-    // FCM dependencies
-    implementation 'com.google.firebase:firebase-messaging:17.3.0'
-    implementation 'com.google.firebase:firebase-core:16.0.1'
+    //region FCM dependencies
+    implementation "com.google.firebase:firebase-messaging:17.3.0"
+    implementation "com.google.firebase:firebase-core:16.0.1"
+    //endregion
 
-    // Add Mobile Protector SDK libraries.
-    releaseImplementation files('../libs/release/libidpmobile.jar')
-    debugImplementation files('../libs/debug/libidpmobile.jar')
+    //region Add Mobile Protector SDK libraries.
+    debugImplementation fileTree(dir: "${EZIO_SDK}/debug", include: ["protector-oath.aar"])
+    releaseImplementation fileTree(dir: "${EZIO_SDK}/release", include: ["protector-oath.aar"])
 
     // Add JNA dependency.
-    implementation 'net.java.dev.jna:jna:4.5.0@aar'
+    implementation "net.java.dev.jna:jna:5.5.0@aar"
+    //endregion
 
     // QR Code Scanner
-    implementation 'me.dm7.barcodescanner:zxing:1.9'
+    implementation "me.dm7.barcodescanner:zxing:1.9"
 }

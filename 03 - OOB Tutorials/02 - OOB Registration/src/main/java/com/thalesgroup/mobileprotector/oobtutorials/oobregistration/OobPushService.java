@@ -72,8 +72,7 @@ public class OobPushService extends FirebaseMessagingService {
     /**
      * Parses the incoming message data and shows a notification in the status bar.
      *
-     * @param data
-     *         Received data.
+     * @param data Received data.
      */
     private void sendNotification(final Map<String, String> data) {
         // First try to get notification manager.
@@ -85,19 +84,19 @@ public class OobPushService extends FirebaseMessagingService {
 
         final String channelId = getString(R.string.push_fcm_channel_id);
         final String message = data.containsKey(C_DATA_KEY_MESSAGE) ? data.get(C_DATA_KEY_MESSAGE)
-                                                                    : getString(R.string.push_approve_question);
+                : getString(R.string.push_approve_question);
 
         // New android does require channel.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             final NotificationChannel notificationChannel = new NotificationChannel(channelId,
-                                                                                    getString(R.string.push_fcm_channel_name),
-                                                                                    NotificationManager.IMPORTANCE_HIGH);
+                    getString(R.string.push_fcm_channel_name),
+                    NotificationManager.IMPORTANCE_HIGH);
 
             // Configure the notification channel."MSP Frame Channel"
             notificationChannel.setDescription(getString(R.string.push_fcm_channel_description));
             notificationChannel.enableLights(true);
             notificationChannel.setLightColor(Color.RED);
-            notificationChannel.setVibrationPattern(new long[]{0, 1000, 500, 1000});
+            notificationChannel.setVibrationPattern(new long[]{ 0, 1000, 500, 1000 });
             notificationChannel.enableVibration(true);
             notificationManager.createNotificationChannel(notificationChannel);
         }
@@ -105,9 +104,9 @@ public class OobPushService extends FirebaseMessagingService {
         // Build final notification.
         final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, channelId);
         notificationBuilder.setAutoCancel(true).setDefaults(Notification.DEFAULT_ALL)
-                           .setWhen(System.currentTimeMillis())
-                           .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark)
-                           .setContentTitle(getString(R.string.notification_caption)).setAutoCancel(true).setContentText(message);
+                .setWhen(System.currentTimeMillis())
+                .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark)
+                .setContentTitle(getString(R.string.notification_caption)).setAutoCancel(true).setContentText(message);
 
         notificationManager.notify(/*notification id*/1, notificationBuilder.build());
     }

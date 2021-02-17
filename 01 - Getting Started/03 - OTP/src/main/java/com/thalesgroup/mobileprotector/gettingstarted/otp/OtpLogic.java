@@ -50,26 +50,23 @@ public class OtpLogic extends AbstractBaseLogic {
     /**
      * Generates an OTP.
      *
-     * @param token
-     *         Token to be used for OTP generation.
-     * @param pin
-     *         PIN.
+     * @param token Token to be used for OTP generation.
+     * @param pin   PIN.
      * @return Generated OTP.
-     * @throws IdpException
-     *         If error during OTP generation occurs.
+     * @throws IdpException If error during OTP generation occurs.
      */
-    public static OtpValue generateOtp(@NonNull final SoftOathToken token, @NonNull final AuthInput pin)
+    public static OtpValue generateOtp(@NonNull SoftOathToken token, @NonNull AuthInput pin)
             throws IdpException {
 
         if (IdpCore.getInstance().getRootDetector().getRootStatus() != RootDetector.RootStatus.NOT_ROOTED) { //NOPMD
             // Handle root status according to app policy.
         }
 
-        final OathFactory oathFactory = OathService.create(OtpModule.create()).getFactory();
-        final SoftOathSettings softOathSettings = oathFactory.createSoftOathSettings();
+        OathFactory oathFactory = OathService.create(OtpModule.create()).getFactory();
+        SoftOathSettings softOathSettings = oathFactory.createSoftOathSettings();
         softOathSettings.setOcraSuite(OtpConfig.getOcraSuite());
 
-        final OathDevice oathDevice = oathFactory.createSoftOathDevice(token, softOathSettings);
+        OathDevice oathDevice = oathFactory.createSoftOathDevice(token, softOathSettings);
         return new OtpValue(oathDevice.getTotp(pin), oathDevice.getLastOtpLifespan(), OtpConfig.getOTPLifetime());
     }
 }

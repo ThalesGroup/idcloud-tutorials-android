@@ -31,14 +31,15 @@ import android.widget.ImageButton;
 
 import com.gemalto.idp.mobile.authentication.mode.pin.PinAuthInput;
 import com.gemalto.idp.mobile.ui.UiModule;
-import com.gemalto.idp.mobile.ui.secureinput.SecureInputBuilderV2;
+import com.gemalto.idp.mobile.ui.secureinput.SecureInputBuilder;
 import com.gemalto.idp.mobile.ui.secureinput.SecureInputService;
 import com.gemalto.idp.mobile.ui.secureinput.SecureInputUi;
-import com.gemalto.idp.mobile.ui.secureinput.SecurePinpadListenerV2;
+import com.gemalto.idp.mobile.ui.secureinput.SecureKeypadListener;
 import com.thalesgroup.mobileprotector.tutorials.advancedsetup.AdvancedSetupLogic;
 import com.thalesgroup.mobileprotector.tutorials.securekeypad.R;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Main entry point of the application for current flavor.
@@ -51,6 +52,7 @@ public class SecureKeypadActivity extends InBandVerificationActivity {
     private static final String DIALOG_TAG_KEYPAD_VARIANT_02 = "DIALOG_TAG_KEYPAD_VARIANT_02";
     private static final String DIALOG_TAG_KEYPAD_VARIANT_03 = "DIALOG_TAG_KEYPAD_VARIANT_03";
     private static final String DIALOG_TAG_KEYPAD_VARIANT_04 = "DIALOG_TAG_KEYPAD_VARIANT_04";
+    private SecureInputBuilder builder;
 
     //endregion
 
@@ -62,7 +64,7 @@ public class SecureKeypadActivity extends InBandVerificationActivity {
         setContentView(R.layout.activity_securekeypad);
 
         // Initialise Mobile Protector SDK.
-        AdvancedSetupLogic.setup(false);
+        AdvancedSetupLogic.setup();
     }
 
     @Override
@@ -101,8 +103,8 @@ public class SecureKeypadActivity extends InBandVerificationActivity {
 
     //region Private Helpers
 
-    private SecurePinpadListenerV2 commonHandler() {
-        return new SecurePinpadListenerV2() {
+    private SecureKeypadListener commonHandler() {
+        return new SecureKeypadListener() {
             @Override
             public void onKeyPressedCountChanged(final int count, final int inputField) {
                 // Handle on key pressed.
@@ -143,10 +145,9 @@ public class SecureKeypadActivity extends InBandVerificationActivity {
     //region User Interface
 
     private void onButtonPressedVariant01() {
-        final SecureInputBuilderV2 builder = SecureInputService.create(UiModule.create()).getSecureInputBuilderV2();
+        builder = SecureInputService.create(UiModule.create()).getSecureInputBuilder();
 
         builder.setScreenBackgroundColor(getResources().getColor(R.color.skcScreenBackgroundColor));
-        builder.setSubscripts(Arrays.asList("1", "2", "3", "4", "5", "6", "7", "8", "9", "0"));
         builder.setOkButtonText(" ");
         builder.setDeleteButtonText(" ");
         builder.setDistanceBetweenKeyAndSubscript(2);
@@ -155,31 +156,28 @@ public class SecureKeypadActivity extends InBandVerificationActivity {
                 getResources().getColor(R.color.skcKeypadGridGradientColorEnd_01));
         builder.setButtonPressVisibility(true);
         builder.setOkButtonImage(R.drawable.outline_done_outline_black_48);
-        builder.setOkButtonImageOpacity(SecureInputBuilderV2.UiControlState.NORMAL, 0.75f);
-        builder.setOkButtonImageOpacity(SecureInputBuilderV2.UiControlState.SELECTED, 0.5f);
-        builder.setOkButtonImageOpacity(SecureInputBuilderV2.UiControlState.DISABLED, 0.25f);
+        builder.setOkButtonImageOpacity(SecureInputBuilder.UiControlState.NORMAL, 0.75f);
+        builder.setOkButtonImageOpacity(SecureInputBuilder.UiControlState.SELECTED, 0.5f);
+        builder.setOkButtonImageOpacity(SecureInputBuilder.UiControlState.DISABLED, 0.25f);
         builder.setDeleteButtonImage(R.drawable.outline_delete_outline_black_48);
-        builder.setDeleteButtonImageOpacity(SecureInputBuilderV2.UiControlState.NORMAL, 0.75f);
-        builder.setDeleteButtonImageOpacity(SecureInputBuilderV2.UiControlState.SELECTED, 0.5f);
-        builder.setDeleteButtonImageOpacity(SecureInputBuilderV2.UiControlState.DISABLED, 0.25f);
-        builder.setButtonGradientColor(SecureInputBuilderV2.UiControlState.NORMAL,
+        builder.setDeleteButtonImageOpacity(SecureInputBuilder.UiControlState.NORMAL, 0.75f);
+        builder.setDeleteButtonImageOpacity(SecureInputBuilder.UiControlState.SELECTED, 0.5f);
+        builder.setDeleteButtonImageOpacity(SecureInputBuilder.UiControlState.DISABLED, 0.25f);
+        builder.setButtonGradientColor(SecureInputBuilder.UiControlState.NORMAL,
                 getResources().getColor(R.color.skcButtonGradientColorNormalStart),
                 getResources().getColor(R.color.skcButtonGradientColorNormalEnd));
-        builder.setButtonGradientColor(SecureInputBuilderV2.UiControlState.SELECTED,
+        builder.setButtonGradientColor(SecureInputBuilder.UiControlState.SELECTED,
                 getResources().getColor(R.color.skcButtonGradientColorSelectedStart),
                 getResources().getColor(R.color.skcButtonGradientColorSelectedEnd));
 
-        final SecureInputUi secureInputUi = builder.buildPinpad(false, false, false, commonHandler());
-
-        // Wipe builder.
-        builder.wipe();
+        final SecureInputUi secureInputUi = builder.buildKeypad(false, false, false, commonHandler());
 
         // Display dialog using common method.
         dialogFragmentShow(secureInputUi.getDialogFragment(), DIALOG_TAG_KEYPAD_VARIANT_01, false);
     }
 
     private void onButtonPressedVariant02() {
-        final SecureInputBuilderV2 builder = SecureInputService.create(UiModule.create()).getSecureInputBuilderV2();
+        builder = SecureInputService.create(UiModule.create()).getSecureInputBuilder();
 
         builder.setKeypadMatrix(4, 4);
         builder.setKeypadHeightRatio(0.25f);
@@ -188,45 +186,39 @@ public class SecureKeypadActivity extends InBandVerificationActivity {
         builder.setKeypadGridGradientColors(
                 getResources().getColor(R.color.skcKeypadGridGradientColorStart_02),
                 getResources().getColor(R.color.skcKeypadGridGradientColorEnd_02));
-        final SecureInputUi secureInputUi = builder.buildPinpad(true, true, false, commonHandler());
-
-        // Wipe builder.
-        builder.wipe();
+        final SecureInputUi secureInputUi = builder.buildKeypad(true, true, false, commonHandler());
 
         // Display dialog using common method.
         dialogFragmentShow(secureInputUi.getDialogFragment(), DIALOG_TAG_KEYPAD_VARIANT_02, false);
     }
 
     private void onButtonPressedVariant03() {
-        final SecureInputBuilderV2 builder = SecureInputService.create(UiModule.create()).getSecureInputBuilderV2();
+        builder = SecureInputService.create(UiModule.create()).getSecureInputBuilder();
 
         builder.setFirstLabel("Old Pin");
         builder.setSecondLabel("New Pin");
         builder.setLabelColor(getResources().getColor(R.color.skcLabelColor));
         builder.setLabelFontSize(30);
-        builder.setLabelAlignment(SecureInputBuilderV2.LabelAlignment.LEFT);
-        builder.setInputFieldBackgroundColor(SecureInputBuilderV2.UiControlFocusState.FOCUSED, getResources().getColor(R.color.skcInputFieldBackgroundColorFocused));
-        final SecureInputUi secureInputUi = builder.buildPinpad(false, true, false, commonHandler());
-
-        // Wipe builder.
-        builder.wipe();
+        builder.setLabelAlignment(SecureInputBuilder.LabelAlignment.LEFT);
+        builder.setInputFieldBackgroundColor(SecureInputBuilder.UiControlFocusState.FOCUSED, getResources().getColor(R.color.skcInputFieldBackgroundColorFocused));
+        final SecureInputUi secureInputUi = builder.buildKeypad(false, true, false, commonHandler());
 
         // Display dialog using common method.
         dialogFragmentShow(secureInputUi.getDialogFragment(), DIALOG_TAG_KEYPAD_VARIANT_03, false);
     }
 
     private void onButtonPressedVariant04() {
-        final SecureInputBuilderV2 builder = SecureInputService.create(UiModule.create()).getSecureInputBuilderV2();
+        builder = SecureInputService.create(UiModule.create()).getSecureInputBuilder();
 
         builder.setFirstLabel("Enter Password");
-        builder.setMaximumAndMinimumInputLength(16,6);
+        builder.setMaximumAndMinimumInputLength(16, 6);
         builder.setKeypadMatrix(6, 6);
-        builder.setKeys("abcdefghijklmnopqrstuvwxyz");
+        List<Character> mainKeys = Arrays.asList(
+                '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
+        );
+        builder.setKeys(mainKeys, null);
         builder.setIsDeleteButtonAlwaysEnabled(true);
-        final SecureInputUi secureInputUi = builder.buildPinpad(true, false, false, commonHandler());
-
-        // Wipe builder.
-        builder.wipe();
+        final SecureInputUi secureInputUi = builder.buildKeypad(true, false, false, commonHandler());
 
         // Display dialog using common method.
         dialogFragmentShow(secureInputUi.getDialogFragment(), DIALOG_TAG_KEYPAD_VARIANT_04, false);

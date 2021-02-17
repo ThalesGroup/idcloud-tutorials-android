@@ -35,10 +35,10 @@ import com.gemalto.idp.mobile.authentication.mode.pin.PinAuthInput;
 import com.gemalto.idp.mobile.core.IdpException;
 import com.gemalto.idp.mobile.otp.oath.soft.SoftOathToken;
 import com.gemalto.idp.mobile.ui.UiModule;
-import com.gemalto.idp.mobile.ui.secureinput.SecureInputBuilderV2;
+import com.gemalto.idp.mobile.ui.secureinput.SecureInputBuilder;
 import com.gemalto.idp.mobile.ui.secureinput.SecureInputService;
 import com.gemalto.idp.mobile.ui.secureinput.SecureInputUi;
-import com.gemalto.idp.mobile.ui.secureinput.SecurePinpadListenerV2;
+import com.gemalto.idp.mobile.ui.secureinput.SecureKeypadListener;
 import com.thalesgroup.mobileprotector.commonutils.callbacks.AuthPinHandler;
 import com.thalesgroup.mobileprotector.commonutils.helpers.Lifespan;
 import com.thalesgroup.mobileprotector.commonutils.helpers.OtpValue;
@@ -60,6 +60,8 @@ public class OtpActivity extends ProvisioningActivity {
     private ImageButton mBtnGenerateOtp;
 
     private static final String DIALOG_TAG_PIN_ENTRY = "DIALOG_TAG_PIN_ENTRY";
+
+    private SecureInputBuilder builder;
 
     //endregion
 
@@ -97,7 +99,7 @@ public class OtpActivity extends ProvisioningActivity {
     @Override
     protected SoftOathToken updateGui() {
         // Get stored token
-        final SoftOathToken token = super.updateGui();
+        SoftOathToken token = super.updateGui();
 
         // To make demo simple we will just disable / enable UI.
         if (mBtnGenerateOtp != null) {
@@ -116,8 +118,10 @@ public class OtpActivity extends ProvisioningActivity {
 
     //region Shared
 
-    protected void displayMessageResult(final String message,
-                                        final Lifespan lifespan) {
+    protected void displayMessageResult(
+            String message,
+            Lifespan lifespan
+    ) {
         if (mResultFragment == null) {
             throw new IllegalStateException(getString(R.string.missing_result_fragment));
         }
@@ -125,16 +129,16 @@ public class OtpActivity extends ProvisioningActivity {
         mResultFragment.show(message, lifespan);
     }
 
-    public void userPin(final AuthPinHandler callback) {
-        final SecureInputBuilderV2 builder = SecureInputService.create(UiModule.create()).getSecureInputBuilderV2();
-        final SecureInputUi secureInputUi = builder.buildPinpad(false, false, true, new SecurePinpadListenerV2() {
+    public void userPin(AuthPinHandler callback) {
+        builder = SecureInputService.create(UiModule.create()).getSecureInputBuilder();
+        SecureInputUi secureInputUi = builder.buildKeypad(false, false, true, new SecureKeypadListener() {
             @Override
-            public void onKeyPressedCountChanged(final int count, final int inputField) {
+            public void onKeyPressedCountChanged(int count, int inputField) {
                 // Handle on key pressed if needed.
             }
 
             @Override
-            public void onInputFieldSelected(final int inputField) {
+            public void onInputFieldSelected(int inputField) {
                 // Handle on input field selected if needed.
             }
 
@@ -149,33 +153,36 @@ public class OtpActivity extends ProvisioningActivity {
             }
 
             @Override
-            public void onFinish(final PinAuthInput pinAuthInput, final PinAuthInput pinAuthInput1) {
+            public void onFinish(PinAuthInput pinAuthInput, PinAuthInput pinAuthInput1) {
                 // Hide view and notify handler.
                 dialogFragmentHide();
                 callback.onPinProvided(pinAuthInput);
+
+                // Wipe the builder
+                builder.wipe();
             }
 
             @Override
-            public void onError(final String errorMessage) {
+            public void onError(String errorMessage) {
                 // Hide view and notify handler.
                 dialogFragmentHide();
                 displayMessageDialog(errorMessage);
+
+                // Wipe the builder
+                builder.wipe();
             }
         });
-
-        // Wipe builder.
-        builder.wipe();
 
         // Display dialog using common method.
         dialogFragmentShow(secureInputUi.getDialogFragment(), DIALOG_TAG_PIN_ENTRY, false);
     }
 
-    protected void generateAndDisplayOtp(final SoftOathToken token, final AuthInput authInput) {
+    protected void generateAndDisplayOtp(SoftOathToken token, AuthInput authInput) {
         try {
-            final OtpValue otpValue = OtpLogic.generateOtp(token, authInput);
+            OtpValue otpValue = OtpLogic.generateOtp(token, authInput);
             displayMessageResult(otpValue.getOtp().toString(), otpValue.getLifespan());
             otpValue.wipe();
-        } catch (final IdpException exception) {
+        } catch (IdpException exception) {
             displayMessageDialog(exception);
         }
 

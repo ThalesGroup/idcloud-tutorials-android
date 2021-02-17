@@ -79,10 +79,11 @@ public abstract class AbstractBaseActivity extends AbstractBaseActivityPermissio
     }
 
     protected void hideKeyboard() {
-        final View view = this.getCurrentFocus();
+        View view = this.getCurrentFocus();
         if (view != null) {
-            final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (imm != null)
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
 
@@ -91,12 +92,12 @@ public abstract class AbstractBaseActivity extends AbstractBaseActivityPermissio
      *
      * @param result Message to be displayed.
      */
-    public void displayMessageDialog(final String result) {
+    public void displayMessageDialog(String result) {
         // Allow to display simple toast from any threads.
         ExecutionService.getExecutionService().runOnMainUiThread(() -> Toast.makeText(AbstractBaseActivity.this, result, Toast.LENGTH_LONG).show());
     }
 
-    public void displayMessageDialog(final int resId) {
+    public void displayMessageDialog(int resId) {
         displayMessageDialog(getString(resId));
     }
 
@@ -105,13 +106,15 @@ public abstract class AbstractBaseActivity extends AbstractBaseActivityPermissio
      *
      * @param exception Application error or nil.
      */
-    public void displayMessageDialog(final Exception exception) {
+    public void displayMessageDialog(Exception exception) {
         displayMessageDialog(exception.getMessage());
     }
 
-    public void dialogFragmentShow(final DialogFragment dialog,
-                                   final String dialogTag,
-                                   final boolean fullscreen) {
+    public void dialogFragmentShow(
+            DialogFragment dialog,
+            String dialogTag,
+            boolean fullscreen
+    ) {
         // Hide any previous dialogs if exists.
         dialogFragmentHide();
 
@@ -128,7 +131,7 @@ public abstract class AbstractBaseActivity extends AbstractBaseActivityPermissio
     public void dialogFragmentHide() {
         // Hide fragment if exists
         if (mLastDialogFragmentTag != null) {
-            final Fragment fragment = getSupportFragmentManager().findFragmentByTag(mLastDialogFragmentTag);
+            Fragment fragment = getSupportFragmentManager().findFragmentByTag(mLastDialogFragmentTag);
             if (fragment instanceof DialogFragment) {
                 ((DialogFragment) fragment).dismiss();
             }
@@ -136,11 +139,11 @@ public abstract class AbstractBaseActivity extends AbstractBaseActivityPermissio
         }
     }
 
-    public void loadingBarShow(final int caption) {
+    public void loadingBarShow(int caption) {
         loadingBarShow(getString(caption));
     }
 
-    public void loadingBarShow(final String caption) {
+    public void loadingBarShow(String caption) {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(this);
             mProgressDialog.setMessage(caption);
@@ -162,7 +165,7 @@ public abstract class AbstractBaseActivity extends AbstractBaseActivityPermissio
     //region Life Cycle
 
     @Override
-    protected void onCreate(final Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -199,7 +202,7 @@ public abstract class AbstractBaseActivity extends AbstractBaseActivityPermissio
 
     //region User Interface
 
-    public void onButtonPressedPermissions(final View view) {
+    public void onButtonPressedPermissions(View view) {
         if (checkMandatoryPermissions()) {
             initApplication();
         }

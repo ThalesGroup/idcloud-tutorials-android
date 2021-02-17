@@ -1,24 +1,24 @@
 // Getting started
-include ':01 - 01 - Setup';                 project(":01 - 01 - Setup").projectDir = file("01 - Getting Started/01 - Setup")
-include ':01 - 02 - Provisioning';          project(":01 - 02 - Provisioning").projectDir = file("01 - Getting Started/02 - Provisioning")
-include ':01 - 03 - OTP';                   project(":01 - 03 - OTP").projectDir = file("01 - Getting Started/03 - OTP")
+include ":01 - 01 - Setup";                 project(":01 - 01 - Setup").projectDir = file("01 - Getting Started/01 - Setup")
+include ":01 - 02 - Provisioning";          project(":01 - 02 - Provisioning").projectDir = file("01 - Getting Started/02 - Provisioning")
+include ":01 - 03 - OTP";                   project(":01 - 03 - OTP").projectDir = file("01 - Getting Started/03 - OTP")
 
 // Tutorials
-include ':02 - 01 - Advanced Setup';        project(":02 - 01 - Advanced Setup").projectDir = file("02 - Tutorials/01 - Advanced Setup")
-include ':02 - 02 - QR Code Basic';         project(":02 - 02 - QR Code Basic").projectDir = file("02 - Tutorials/02 - QR Code Basic")
-include ':02 - 03 - Biometric Id';          project(":02 - 03 - Biometric Id").projectDir = file("02 - Tutorials/03 - Biometric Id")
-include ':02 - 04 - In Band Verification';  project(":02 - 04 - In Band Verification").projectDir = file("02 - Tutorials/04 - In Band Verification")
-include ':02 - 05 - Change Pin';            project(":02 - 05 - Change Pin").projectDir = file("02 - Tutorials/05 - Change Pin")
-include ':02 - 06 - Secure Keypad';         project(":02 - 06 - Secure Keypad").projectDir = file("02 - Tutorials/06 - Secure Keypad")
-include ':02 - 07 - Transaction Sign';      project(":02 - 07 - Transaction Sign").projectDir = file("02 - Tutorials/07 - Transaction Sign")
+include ":02 - 01 - Advanced Setup";        project(":02 - 01 - Advanced Setup").projectDir = file("02 - Tutorials/01 - Advanced Setup")
+include ":02 - 02 - QR Code Basic";         project(":02 - 02 - QR Code Basic").projectDir = file("02 - Tutorials/02 - QR Code Basic")
+include ":02 - 03 - Biometric Id";          project(":02 - 03 - Biometric Id").projectDir = file("02 - Tutorials/03 - Biometric Id")
+include ":02 - 04 - In Band Verification";  project(":02 - 04 - In Band Verification").projectDir = file("02 - Tutorials/04 - In Band Verification")
+include ":02 - 05 - Change Pin";            project(":02 - 05 - Change Pin").projectDir = file("02 - Tutorials/05 - Change Pin")
+include ":02 - 06 - Secure Keypad";         project(":02 - 06 - Secure Keypad").projectDir = file("02 - Tutorials/06 - Secure Keypad")
+include ":02 - 07 - Transaction Sign";      project(":02 - 07 - Transaction Sign").projectDir = file("02 - Tutorials/07 - Transaction Sign")
 
 // OOB Tutorials
-include ':03 - 01 - OOB Setup';             project(":03 - 01 - OOB Setup").projectDir = file("03 - OOB Tutorials/01 - OOB Setup")
-include ':03 - 02 - OOB Registration';      project(":03 - 02 - OOB Registration").projectDir = file("03 - OOB Tutorials/02 - OOB Registration")
-include ':03 - 03 - OOB Messaging';         project(":03 - 03 - OOB Messaging").projectDir = file("03 - OOB Tutorials/03 - OOB Messaging")
+include ":03 - 01 - OOB Setup";             project(":03 - 01 - OOB Setup").projectDir = file("03 - OOB Tutorials/01 - OOB Setup")
+include ":03 - 02 - OOB Registration";      project(":03 - 02 - OOB Registration").projectDir = file("03 - OOB Tutorials/02 - OOB Registration")
+include ":03 - 03 - OOB Messaging";         project(":03 - 03 - OOB Messaging").projectDir = file("03 - OOB Tutorials/03 - OOB Messaging")
 
 // Common projects and external dependency
-include ':app', ':commonutils', ':FaceUISDK', ':UiComponents'
+include ":app", ":commonutils", ":UiComponents"
 
 
 

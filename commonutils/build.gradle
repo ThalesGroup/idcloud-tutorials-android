@@ -1,22 +1,11 @@
-apply plugin: 'com.android.library'
-
-android {
-    compileSdkVersion 28
-    defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 28
-    }
-    compileOptions {
-        sourceCompatibility = '1.8'
-        targetCompatibility = '1.8'
-    }
-}
+apply plugin: "com.android.library"
+apply from: "${rootDir}/build-android-based.gradle"
 
 dependencies {
-    api 'com.android.support:appcompat-v7:28.0.0'
-    api 'com.android.support.constraint:constraint-layout:1.1.3'
-    api 'com.android.support:support-v4:28.0.0'
+    api "com.android.support:appcompat-v7:${propAndroidSupport}"
+    api "com.android.support.constraint:constraint-layout:2.0.4"
+    api "com.android.support:support-v4:${propAndroidSupport}"
 
-    releaseApi files('../libs/release/libidpmobile.jar')
-    debugApi files('../libs/debug/libidpmobile.jar')
+    debugApi fileTree(dir: "${EZIO_SDK}/debug", include: ["protector-oath.aar"])
+    releaseApi fileTree(dir: "${EZIO_SDK}/release", include: ["protector-oath.aar"])
 }

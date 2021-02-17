@@ -101,14 +101,11 @@ public final class FragmentBioFingerprint extends DialogFragment {
 
         retValue.setFocusableInTouchMode(true);
         retValue.requestFocus();
-        retValue.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(final View view, final int keyCode, final KeyEvent keyEvent) {
-                if (keyCode == KeyEvent.KEYCODE_BACK && keyEvent.getAction() == KeyEvent.ACTION_UP ) {
-                    onButtonPressedBack();
-                }
-                return false;
+        retValue.setOnKeyListener((view, keyCode, keyEvent) -> {
+            if (keyCode == KeyEvent.KEYCODE_BACK && keyEvent.getAction() == KeyEvent.ACTION_UP) {
+                onButtonPressedBack();
             }
+            return false;
         });
 
         mLayoutAttempts = retValue.findViewById(R.id.layout_attempts);

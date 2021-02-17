@@ -44,7 +44,7 @@ public class AdvancedSetupActivity extends OtpActivity {
         setContentView(R.layout.activity_advancedsetup);
 
         // Initialise Mobile Protector SDK.
-        AdvancedSetupLogic.setup(false);
+        AdvancedSetupLogic.setup();
 
         // Visual notification, since basic setup does not have more use cases.
         displayMessageDialog(R.string.setup_successful);

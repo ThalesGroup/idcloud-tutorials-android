@@ -47,7 +47,7 @@ public final class ExecutionService {
      * Creates a new {@code ExecutionService} instance.
      */
     private ExecutionService() {
-        mExecutor = new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>()) {
+        mExecutor = new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>()) {
             @Override
             protected void afterExecute(final Runnable runnable, final Throwable throwable) {
                 if (throwable != null) {

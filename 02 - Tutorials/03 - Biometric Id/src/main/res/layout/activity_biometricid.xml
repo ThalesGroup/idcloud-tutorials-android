@@ -77,36 +77,6 @@
                 android:layout_margin="10dp"/>
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top"
-            android:orientation="vertical">
-
-            <ImageButton
-                android:id="@+id/activity_biometricid_btn_generate_otp_face"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="10dp"
-                android:background="@drawable/otp_button_face"
-                android:contentDescription="@string/button_otp_desc"/>
-
-            <Switch
-                android:id="@+id/activity_biometricid_switch_generate_otp_face"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="10dp"/>
-
-            <Button
-                android:id="@+id/activity_biometricid_btn_enroll_face"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="10dp"/>
-
-        </LinearLayout>
     </LinearLayout>
 
     <!--
