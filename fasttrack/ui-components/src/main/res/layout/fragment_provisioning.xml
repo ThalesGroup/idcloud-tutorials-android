@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    tools:ignore="ButtonStyle">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:padding="10dp"
+        android:text="@string/provision_fragment_title"
+        android:textSize="24sp" />
+
+    <EditText
+        android:id="@+id/fragment_provisioning_et_user_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:autofillHints="@null"
+        android:gravity="center"
+        android:hint="@string/provision_fragment_hint_user_id"
+        android:inputType="textNoSuggestions"
+        android:padding="10dp" />
+
+    <EditText
+        android:id="@+id/fragment_provisioning_et_reg_code"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:autofillHints="@null"
+        android:gravity="center"
+        android:hint="@string/provision_fragment_hint_reg_code"
+        android:inputType="numberDecimal"
+        android:padding="10dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/fragment_provisioning_btn_provision"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="0.5"
+            android:text="@string/provision_fragment_btn_provision" />
+
+        <Button
+            android:id="@+id/fragment_provisioning_btn_remove_token"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_weight="0.5"
+            android:enabled="false"
+            android:text="@string/provision_fragment_btn_remove_token" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/fragment_provisioning_btn_provision_using_qr"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:text="@string/provision_fragment_btn_provision_using_qr" />
+
+</LinearLayout>

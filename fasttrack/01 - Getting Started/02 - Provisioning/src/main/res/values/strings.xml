@@ -1,0 +1,9 @@
+<resources>
+    <string name="gettingstarted_provisioning_caption">01 – 02 - Provisioning</string>
+
+    <string name="loading_provisioning">Provisioning …</string>
+    <string name="token_remove_success">Token successfully removed.</string>
+    <string name="token_remove_failed">Failed to remove token.</string>
+    <string name="token_not_provisioned">No token has been provisioned.</string>
+    <string name="token_provision_success">Token successfully provisioned.</string>
+</resources>

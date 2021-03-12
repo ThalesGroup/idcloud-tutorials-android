@@ -1,0 +1,5 @@
+<resources>
+    <string name="ui_label_permissions_caption">Missing permission</string>
+    <string name="ui_label_permissions_description">Please make sure, that non permission is permanently blocked in the settings.</string>
+    <string name="ui_button_permissions">Ask for permissions</string>
+</resources>

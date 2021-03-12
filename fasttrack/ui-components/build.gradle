@@ -1,0 +1,12 @@
+apply plugin: "com.android.library"
+apply from: "${rootDir}/build-android-based.gradle"
+
+dependencies {
+
+    // Add common code module
+    api project(":common-utils")
+
+    // QR Code Scanner
+    api "me.dm7.barcodescanner:zxing:1.9.13"
+
+}

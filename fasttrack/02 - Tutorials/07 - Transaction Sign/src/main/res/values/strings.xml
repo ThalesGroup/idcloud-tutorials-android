@@ -1,0 +1,7 @@
+<resources>
+    <string name="tutorials_transaction_sign_caption">02 – 07 - Transaction Sign</string>
+
+    <string name="tutorials_transaction_sign_beneficiary">Beneficiary</string>
+    <string name="tutorials_transaction_sign_amount">Amount</string>
+
+</resources>

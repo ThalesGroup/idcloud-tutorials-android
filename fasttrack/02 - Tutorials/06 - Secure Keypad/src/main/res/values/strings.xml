@@ -1,0 +1,11 @@
+<resources>
+    <string name="tutorials_secure_keypad_caption">02 – 06 - Secure Keypad</string>
+
+    <string name="variants">Variants.</string>
+    <string name="variant_01">1.</string>
+    <string name="variant_02">2.</string>
+    <string name="variant_03">3.</string>
+    <string name="variant_04">4.</string>
+
+    <string name="btn_securekeypad_desc">Secure Keypad</string>
+</resources>

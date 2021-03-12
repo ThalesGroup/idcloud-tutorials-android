@@ -1,0 +1,6 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/fingerprint_pressed" android:state_enabled="true" android:state_pressed="true" />
+    <item android:drawable="@drawable/fingerprint_enabled" android:state_enabled="true" android:state_pressed="false" />
+    <item android:drawable="@drawable/fingerprint_disabled" android:state_enabled="false" android:state_pressed="false" />
+    <item android:drawable="@drawable/fingerprint_disabled" android:state_enabled="false" android:state_pressed="true" />
+</selector>

@@ -1,0 +1,19 @@
+apply plugin: "com.android.library"
+apply from: "${rootDir}/build-android-based.gradle"
+
+dependencies {
+    api "androidx.appcompat:appcompat:1.2.0"
+    api "androidx.constraintlayout:constraintlayout:2.0.4"
+    api "androidx.legacy:legacy-support-v4:1.0.0"
+
+    //region Add Mobile Protector SDK libraries.
+    debugApi project(path: ":protector-oath", configuration: "debug")
+    releaseApi project(path: ":protector-oath", configuration: "release")
+
+    releaseApi files("${FASTTRACK_SDK}/release/libidpmobilefasttrack.jar")
+    debugApi files("${FASTTRACK_SDK}/debug/libidpmobilefasttrack.jar")
+
+    // Add JNA dependency.
+    implementation "net.java.dev.jna:jna:5.5.0@aar"
+    //endregion
+}

@@ -1,0 +1,144 @@
+apply plugin: "com.android.application"
+apply plugin: "com.google.gms.google-services"
+apply from: "${rootDir}/build-android-based.gradle"
+
+//region Sub-project configurations
+def PROJECT_DATA = [
+        //region v1 - Getting Started
+        "com.thalesgroup.mobileprotector.gettingstarted": [
+                [
+                        flavourName: "v1_1_setup",
+                        project    : project(":01 - 01 - Setup"),
+                ],
+
+                [
+                        flavourName: "v1_2_provisioning",
+                        project    : project(":01 - 02 - Provisioning"),
+                ],
+
+                [
+                        flavourName: "v1_3_otp",
+                        project    : project(":01 - 03 - OTP"),
+                ]
+        ],
+        //endregion
+
+        //region v2 - Tutorials
+        "com.thalesgroup.mobileprotector.tutorials"     : [
+                [
+                        flavourName: "v2_1_adv_setup",
+                        project    : project(":02 - 01 - Advanced Setup"),
+                ],
+
+                [
+                        flavourName: "v2_2_QR_code",
+                        project    : project(":02 - 02 - QR Code Basic"),
+                ],
+
+                [
+                        flavourName: "v2_3_biometric",
+                        project    : project(":02 - 03 - Biometric Id"),
+                ],
+
+                [
+                        flavourName: "v2_4_inbandVerification",
+                        project    : project(":02 - 04 - In Band Verification"),
+                ],
+
+                [
+                        flavourName: "v2_5_changepin",
+                        project    : project(":02 - 05 - Change Pin"),
+                ],
+
+                [
+                        flavourName: "v2_6_secure_keypad",
+                        project    : project(":02 - 06 - Secure Keypad"),
+                ],
+
+                [
+                        flavourName: "v2_7_transaction_sign",
+                        project    : project(":02 - 07 - Transaction Sign"),
+                ],
+        ],
+        //endregion
+
+        //region v3 - OOB tutorials
+        "com.thalesgroup.mobileprotector.oobtutorials"  : [
+                [
+                        flavourName: "v3_1_oob_setup",
+                        project    : project(":03 - 01 - OOB Setup"),
+                ],
+
+                [
+                        flavourName: "v3_2_oob_registration",
+                        project    : project(":03 - 02 - OOB Registration"),
+                ],
+
+                [
+                        flavourName: "v3_3_oob_messaging",
+                        project    : project(":03 - 03 - OOB Messaging"),
+                ],
+        ],
+        //endregion
+]
+//endregion
+
+android {
+    defaultConfig {
+        applicationId "com.thalesgroup.mobileprotector"
+
+        versionCode 1
+        versionName "1.0"
+        multiDexEnabled true
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+        }
+    }
+
+    flavorDimensions "version"
+    PROJECT_DATA.each { packageID, prjData ->
+        prjData.each {
+            def fName = it["flavourName"]
+            def prj = it["project"]
+            def manifestFile = new File("${prj.projectDir}/manifest/AndroidManifest.xml")
+
+            // Configure for the flavour
+            productFlavors {
+                "$fName" {
+                    dimension "version"
+                    applicationId "$packageID"
+                }
+            }
+
+            // Configure the manifest
+            sourceSets {
+                "$fName" {
+                    manifest.srcFile manifestFile
+                }
+            }
+        }
+    }
+}
+
+dependencies {
+    // Add common code module
+    implementation project(":common-utils")
+
+    //region Sub-project dependency
+    PROJECT_DATA.each { packageID, prjData ->
+        prjData.each {
+            implementation it["project"]
+        }
+    }
+    //endregion
+
+    //region Android components
+    implementation "androidx.appcompat:appcompat:1.2.0"
+    implementation "androidx.constraintlayout:constraintlayout:2.0.4"
+    implementation "androidx.legacy:legacy-support-v4:1.0.0"
+    //endregion
+}

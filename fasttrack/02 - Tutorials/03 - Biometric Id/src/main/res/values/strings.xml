@@ -1,0 +1,9 @@
+<resources>
+    <string name="tutorials_biometric_id_caption">02 – 03 - Biometric Id</string>
+
+    <string name="ui_label_generate_otp_alone">Generate OTP</string>
+    <string name="ui_label_verify_finger">Verify fingerprint to continue</string>
+    <string name="ui_label_touch_sensor">Touch sensor</string>
+    <string name="ui_label_failed_attempts">Failed attempts:</string>
+    <string name="ui_button_use_pin">USE PIN</string>
+</resources>

@@ -1,0 +1,5 @@
+configurations.maybeCreate("debug")
+artifacts.add("debug", file("${EZIO_SDK}/debug/protector-oath.aar"))
+
+configurations.maybeCreate("release")
+artifacts.add("release", file("${EZIO_SDK}/release/protector-oath.aar"))

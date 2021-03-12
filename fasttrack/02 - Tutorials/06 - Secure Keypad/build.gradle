@@ -1,0 +1,6 @@
+apply plugin: "com.android.library"
+apply from: "${rootDir}/build-android-based.gradle"
+
+dependencies {
+    api project(":02 - 05 - Change Pin")
+}
