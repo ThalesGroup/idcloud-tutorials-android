@@ -32,6 +32,11 @@ package com.thalesgroup.mobileprotector.tutorials.inbandverification;
  */
 class InBandVerificationConfig {
 
+    //region Json Request
+    static final String JWT = "";
+    static final String API_KEY = "";
+    //endregion
+
     /**
      * Gets authentication URL where the generated OTP is validated.
      *
@@ -41,21 +46,4 @@ class InBandVerificationConfig {
         return "";
     }
 
-    /**
-     * Gets the username used to authenticate on the authentication URL.
-     *
-     * @return Username.
-     */
-    static String getBasicAuthenticationUsername() {
-        return "";
-    }
-
-    /**
-     * Gets the password used to authenticate on the authentication URL.
-     *
-     * @return Password.
-     */
-    static String getBasicAuthenticationPassword() {
-        return "";
-    }
 }

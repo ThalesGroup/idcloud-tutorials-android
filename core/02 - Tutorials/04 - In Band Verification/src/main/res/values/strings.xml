@@ -3,5 +3,7 @@
 
     <string name="button_verify_otp_desc">Verify OTP</string>
     <string name="loading_verifying">Verifying…</string>
+    <string name="otp_verify_success">OTP verify success</string>
+    <string name="otp_verify_fail">OTP verify fail</string>
 
 </resources>

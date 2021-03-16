@@ -82,7 +82,7 @@ public final class ExecutionService {
      * @param runnable
      *         {@code Runnable} to run on background thread.
      */
-    public void runOnBackgroudThread(final Runnable runnable) {
+    public void runOnBackgroundThread(final Runnable runnable) {
         mExecutor.execute(runnable);
     }
 
