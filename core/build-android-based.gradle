@@ -1,9 +1,5 @@
 // Common android build version properties
 allprojects {
-    ext {
-        // TODO: update this path accordingly to your environment
-        EZIO_SDK = "${rootDir}/../../../dist/android/default/external"
-    }
 
     ext {
         propBuildToolsVersion = "30.0.1"

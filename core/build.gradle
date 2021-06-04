@@ -1,5 +1,12 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
+allprojects {
+    ext {
+        // TODO: update this path accordingly to your environment
+        EZIO_SDK = ""
+    }
+}
+
 buildscript {
 
     repositories {
