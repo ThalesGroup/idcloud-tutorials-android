@@ -63,14 +63,12 @@ public class ProvisioningLogic extends AbstractBaseLogic {
      * @param registrationCode Registration code.
      * @param callback         Callback back to the application - called on Main UI Thread.
      */
-    public static void provisionWithUserId(
-            @NonNull String userId,
-            @NonNull SecureString registrationCode,
-            @NonNull final GenericHandler callback
-    ) {
-        OathTokenManager oathTokenManager = OathService.create(OtpModule.create()).getTokenManager();
+    public static void provisionWithUserId(@NonNull final String userId,
+                                           @NonNull final SecureString registrationCode,
+                                           @NonNull final GenericHandler callback) {
+        final OathTokenManager oathTokenManager = OathService.create(OtpModule.create()).getTokenManager();
         try {
-            ProvisioningConfiguration provisioningConfiguration = new EpsConfigurationBuilder(registrationCode,
+            final ProvisioningConfiguration provisioningConfiguration = new EpsConfigurationBuilder(registrationCode,
                     new URL(ProvisioningConfig.getProvisioningUrl()),
                     ProvisioningConfig.getDomain(),
                     MobileProvisioningProtocol.PROVISIONING_PROTOCOL_V5,
@@ -80,32 +78,30 @@ public class ProvisioningLogic extends AbstractBaseLogic {
                     .setTlsConfiguration(ProvisioningConfig.getTlsConfiguration()).build();
 
             // Prepare fingerprint policy.
-            DeviceFingerprintSource deviceFingerprintSource = new DeviceFingerprintSource(ProvisioningConfig.getCustomFingerprintData(),
+            final DeviceFingerprintSource deviceFingerprintSource = new DeviceFingerprintSource(ProvisioningConfig.getCustomFingerprintData(),
                     DeviceFingerprintSource.Type.SOFT);
-            DeviceFingerprintTokenPolicy deviceFingerprintTokenPolicy = new DeviceFingerprintTokenPolicy(true,
+            final DeviceFingerprintTokenPolicy deviceFingerprintTokenPolicy = new DeviceFingerprintTokenPolicy(true,
                     deviceFingerprintSource);
             oathTokenManager.createToken(userId,
                     provisioningConfiguration,
                     deviceFingerprintTokenPolicy,
                     new TokenManager.TokenCreationCallback() {
                         @Override
-                        public void onSuccess(
-                                Token token,
-                                Map<String, String> map
-                        ) {
+                        public void onSuccess(final Token token,
+                                              final Map<String, String> map) {
                             callback.onFinished(true, getString(R.string.token_provision_success));
                             registrationCode.wipe();
                         }
 
                         @Override
-                        public void onError(IdpException exception) {
+                        public void onError(final IdpException exception) {
                             callback.onFinished(false, exception.getMessage());
                             registrationCode.wipe();
                         }
                     });
-        } catch (MalformedURLException e) {
+        } catch (final MalformedURLException exception) {
             // This should not happen.
-            throw new IllegalStateException(e.getMessage());
+            throw new IllegalStateException(exception.getMessage());
         }
     }
 
@@ -120,12 +116,12 @@ public class ProvisioningLogic extends AbstractBaseLogic {
         SoftOathToken retValue = null;
 
         try {
-            OathTokenManager oathTokenManager = OathService.create(OtpModule.create()).getTokenManager();
-            Set<String> tokenNames = oathTokenManager.getTokenNames();
+            final OathTokenManager oathTokenManager = OathService.create(OtpModule.create()).getTokenManager();
+            final Set<String> tokenNames = oathTokenManager.getTokenNames();
             if (!tokenNames.isEmpty()) {
                 retValue = oathTokenManager.getToken(tokenNames.iterator().next(), ProvisioningConfig.getCustomFingerprintData());
             }
-        } catch (IdpException exception) {
+        } catch (final IdpException exception) {
             // Application might want to handle invalid token in specific way. For example remove old one and ask for new provision.
             // Sample code will simple throw exception and crash.
             // Error here usually mean wrong password or SDK configuration.
@@ -142,9 +138,9 @@ public class ProvisioningLogic extends AbstractBaseLogic {
      */
     public static boolean removeToken() {
         try {
-            OathTokenManager oathTokenManager = OathService.create(OtpModule.create()).getTokenManager();
+            final OathTokenManager oathTokenManager = OathService.create(OtpModule.create()).getTokenManager();
             return oathTokenManager.removeToken(ProvisioningLogic.getToken());
-        } catch (IdpException exception) {
+        } catch (final IdpException exception) {
             // Application might want to handle invalid token in specific way.
             // Error here usually mean wrong password or SDK configuration.
             throw new IllegalStateException(exception.getMessage());

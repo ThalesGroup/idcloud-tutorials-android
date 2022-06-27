@@ -78,7 +78,7 @@ public class ChangePinActivity extends InBandVerificationActivity {
     @Override
     protected OathTokenDevice updateGui() {
         // Get stored token
-        OathTokenDevice token = super.updateGui();
+        final OathTokenDevice token = super.updateGui();
 
         // To make demo simple we will just disable / enable UI.
         if (mBtnChangePin != null) {
@@ -91,7 +91,7 @@ public class ChangePinActivity extends InBandVerificationActivity {
 
     //region Shared
 
-    protected void userPins(AuthPinsHandler callback) {
+    protected void userPins(final AuthPinsHandler callback) {
         userPin((pin1, error1) -> {
             if (pin1 != null) {
                 userPin((pin2, error2) -> {
@@ -107,15 +107,13 @@ public class ChangePinActivity extends InBandVerificationActivity {
 
     //region Private Helpers
 
-    private void changePin_GetAndVerifyNewPin(
-            OathTokenDevice token,
-            String oldPin,
-            Lifespan lifespan
-    ) {
+    private void changePin_GetAndVerifyNewPin(final OathTokenDevice token,
+                                              final String oldPin,
+                                              final Lifespan lifespan) {
         // Display pin input dialog.
         userPins(
                 (firstPin, secondPin) -> {
-                    String result = ChangePinLogic.changePin(token, oldPin, firstPin, secondPin);
+                    final String result = ChangePinLogic.changePin(token, oldPin, firstPin, secondPin);
                     displayMessageResult(result, lifespan);
                 }
         );
@@ -127,9 +125,10 @@ public class ChangePinActivity extends InBandVerificationActivity {
 
     private void onButtonPressedChangePin() {
         // Get currently provisioned token.
-        OathTokenDevice token = ProvisioningLogic.getToken();
-        if (token == null)
+        final OathTokenDevice token = ProvisioningLogic.getToken();
+        if (token == null) {
             throw new IllegalStateException(getString(R.string.token_not_provisioned));
+        }
 
         // Get the original PIN value from user
         userPin((pin, error) -> {

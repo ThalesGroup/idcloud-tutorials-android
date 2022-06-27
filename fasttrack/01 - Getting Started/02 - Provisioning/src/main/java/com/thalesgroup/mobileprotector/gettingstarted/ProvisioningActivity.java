@@ -78,7 +78,7 @@ public class ProvisioningActivity extends SetupActivity implements ProvisioningF
     protected OathTokenDevice updateGui() {
 
         // Get stored token
-        OathTokenDevice token = ProvisioningLogic.getToken();
+        final OathTokenDevice token = ProvisioningLogic.getToken();
 
         // Update all UI fragments if they are present.
         if (mProvisioningFragment != null) {
@@ -103,7 +103,7 @@ public class ProvisioningActivity extends SetupActivity implements ProvisioningF
     //region ProvisioningFragmentDelegate
 
     @Override
-    public void onProvision(String userId, String registrationCode) {
+    public void onProvision(final String userId, final String registrationCode) {
         loadingBarShow(R.string.loading_provisioning);
 
         ProvisioningLogic.provisionWithUserId(userId, registrationCode, (success, result) -> {

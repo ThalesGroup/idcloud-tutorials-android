@@ -213,7 +213,7 @@ public class SecureKeypadActivity extends InBandVerificationActivity {
         builder.setFirstLabel("Enter Password");
         builder.setMaximumAndMinimumInputLength(16, 6);
         builder.setKeypadMatrix(6, 6);
-        List<Character> mainKeys = Arrays.asList(
+        final List<Character> mainKeys = Arrays.asList(
                 '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
         );
         builder.setKeys(mainKeys, null);

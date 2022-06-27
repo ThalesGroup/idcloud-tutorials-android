@@ -75,7 +75,7 @@ public class InBandVerificationActivity extends BiometricIdActivity {
     @Override
     protected OathTokenDevice updateGui() {
         // Get stored token
-        OathTokenDevice token = super.updateGui();
+        final OathTokenDevice token = super.updateGui();
 
         // To make demo simple we will just disable / enable UI.
         if (mBtnVerifyOtp != null) {
@@ -91,9 +91,10 @@ public class InBandVerificationActivity extends BiometricIdActivity {
 
     private void onButtonPressedVerifyOtp() {
         // Get currently provisioned token.
-        OathTokenDevice token = ProvisioningLogic.getToken();
-        if (token == null)
+        final OathTokenDevice token = ProvisioningLogic.getToken();
+        if (token == null) {
             throw new IllegalStateException(getString(R.string.token_not_provisioned));
+        }
 
         userPin((pin, error) -> {
 

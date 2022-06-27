@@ -65,12 +65,10 @@ public class ProvisioningLogic extends BaseLogic {
      * @param registrationCode Registration code.
      * @param callback         Callback back to the application - called on Main UI Thread.
      */
-    public static void provisionWithUserId(
-            @NonNull String userId,
-            @NonNull String registrationCode,
-            @NonNull GenericHandler callback
-    ) {
-        OathMobileProtector oathMobileProtector = getOathMobileProtector();
+    public static void provisionWithUserId(@NonNull final String userId,
+                                           @NonNull final String registrationCode,
+                                           @NonNull final GenericHandler callback) {
+        final OathMobileProtector oathMobileProtector = getOathMobileProtector();
         oathMobileProtector.withDeviceFingerprintSource(
                 new MobileFingerprintSource(
                         ProvisioningConfig.getCustomFingerprintData(),
@@ -78,7 +76,7 @@ public class ProvisioningLogic extends BaseLogic {
                 )
         );
 
-        TotpSettings totpSettings = new TotpSettings();
+        final TotpSettings totpSettings = new TotpSettings();
         totpSettings.setTimeStepSize(ProvisioningConfig.getOtpLifespan());
 
         oathMobileProtector.provision(userId,
@@ -87,8 +85,8 @@ public class ProvisioningLogic extends BaseLogic {
                 new OathTokenDeviceCreationCallback() {
                     @Override
                     public void onSuccess(
-                            OathTokenDevice oathTokenDevice,
-                            Map<String, String> map
+                            final OathTokenDevice oathTokenDevice,
+                            final Map<String, String> map
                     ) {
                         saveIdCloudUserId(userId);
 
@@ -97,7 +95,7 @@ public class ProvisioningLogic extends BaseLogic {
                     }
 
                     @Override
-                    public void onError(FastTrackException exception) {
+                    public void onError(final FastTrackException exception) {
                         callback.onFinished(false, exception.getMessage());
                     }
                 });
@@ -112,11 +110,11 @@ public class ProvisioningLogic extends BaseLogic {
     public static OathTokenDevice getToken() {
         OathTokenDevice retValue = null;
         try {
-            Set<String> tokenNames = getOathMobileProtector().getTokenDeviceNames();
+            final Set<String> tokenNames = getOathMobileProtector().getTokenDeviceNames();
             if (!tokenNames.isEmpty()) {
                 retValue = getOathMobileProtector().getTokenDevice(tokenNames.iterator().next(), ProvisioningConfig.getCustomFingerprintData());
             }
-        } catch (FastTrackException exception) {
+        } catch (final FastTrackException exception) {
             // Application might want to handle invalid token in specific way. For example remove old one and ask for new provision.
             // Sample code will simple throw exception and crash.
             // Error here usually mean wrong password or SDK configuration.
@@ -135,19 +133,20 @@ public class ProvisioningLogic extends BaseLogic {
         boolean retValue = false;
 
         try {
-            Set<String> tokenNames = getOathMobileProtector().getTokenDeviceNames();
+            final Set<String> tokenNames = getOathMobileProtector().getTokenDeviceNames();
             if (!tokenNames.isEmpty()) {
                 retValue = getOathMobileProtector().removeTokenDevice(tokenNames.iterator().next());
             }
-        } catch (FastTrackException exception) {
+        } catch (final FastTrackException exception) {
             // Application might want to handle invalid token in specific way. For example remove old one and ask for new provision.
             // Sample code will simple throw exception and crash.
             // Error here usually mean wrong password or SDK configuration.
             throw new IllegalStateException(exception.getMessage());
         }
 
-        if (retValue)
+        if (retValue) {
             saveIdCloudUserId(null);
+        }
 
         return retValue;
     }
@@ -156,16 +155,16 @@ public class ProvisioningLogic extends BaseLogic {
         if (sOathTokenManager == null) {
             try {
                 sOathTokenManager = FastTrack.getInstance().getOathMobileProtectorBuilder(
-                        new URL(ProvisioningConfig.getProvisioningUrl()),
-                        ProvisioningConfig.getDomain(),
-                        MobileProtector.ProvisioningProtocol.PROTOCOL_V5,
-                        ProvisioningConfig.getRsaKeyId(),
-                        ProvisioningConfig.getRsaKeyExponent(),
-                        ProvisioningConfig.getRsaKeyModulus()
-                )
+                                new URL(ProvisioningConfig.getProvisioningUrl()),
+                                ProvisioningConfig.getDomain(),
+                                MobileProtector.ProvisioningProtocol.PROTOCOL_V5,
+                                ProvisioningConfig.getRsaKeyId(),
+                                ProvisioningConfig.getRsaKeyExponent(),
+                                ProvisioningConfig.getRsaKeyModulus()
+                        )
                         .withProtectorRootPolicy(SetupConfig.getTokenRootPolicy())
                         .build();
-            } catch (MalformedURLException e) {
+            } catch (final MalformedURLException e) {
                 // This should not happen.
                 throw new IllegalStateException(e.getMessage());
             }
@@ -174,22 +173,23 @@ public class ProvisioningLogic extends BaseLogic {
         return sOathTokenManager;
     }
 
-    protected static void saveIdCloudUserId(String userId) {
-        SharedPreferences pref = getSharedPrefs();
+    protected static void saveIdCloudUserId(final String userId) {
+        final SharedPreferences pref = getSharedPrefs();
         if (pref != null) {
-            SharedPreferences.Editor editor = pref.edit();
+            final SharedPreferences.Editor editor = pref.edit();
 
-            if (userId != null)
+            if (userId != null) {
                 editor.putString(PREF_IDCLOUD_USER_ID, userId);
-            else
+            } else {
                 editor.remove(PREF_IDCLOUD_USER_ID);
+            }
 
             editor.apply();
         }
     }
 
     protected static String getIdCloudUserId() {
-        SharedPreferences pref = getSharedPrefs();
+        final SharedPreferences pref = getSharedPrefs();
         return pref != null ? pref.getString(PREF_IDCLOUD_USER_ID, null) : null;
     }
 }

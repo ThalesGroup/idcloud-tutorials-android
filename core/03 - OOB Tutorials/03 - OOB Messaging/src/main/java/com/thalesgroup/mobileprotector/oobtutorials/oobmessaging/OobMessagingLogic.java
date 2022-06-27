@@ -27,6 +27,9 @@
 
 package com.thalesgroup.mobileprotector.oobtutorials.oobmessaging;
 
+import static com.gemalto.idp.mobile.oob.message.OobTransactionSigningResponse.OobTransactionSigningResponseValue.ACCEPTED;
+import static com.gemalto.idp.mobile.oob.message.OobTransactionSigningResponse.OobTransactionSigningResponseValue.REJECTED;
+
 import android.content.Context;
 import android.support.annotation.NonNull;
 
@@ -64,9 +67,6 @@ import com.thalesgroup.mobileprotector.commonutils.helpers.OtpValue;
 import com.thalesgroup.mobileprotector.gettingstarted.otp.OtpConfig;
 import com.thalesgroup.mobileprotector.oobtutorials.oobregistration.OobRegistrationConfig;
 import com.thalesgroup.mobileprotector.oobtutorials.oobregistration.OobRegistrationLogic;
-
-import static com.gemalto.idp.mobile.oob.message.OobTransactionSigningResponse.OobTransactionSigningResponseValue.ACCEPTED;
-import static com.gemalto.idp.mobile.oob.message.OobTransactionSigningResponse.OobTransactionSigningResponseValue.REJECTED;
 
 /**
  * Implementation of OOB sign transaction logic.

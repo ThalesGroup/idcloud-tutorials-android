@@ -50,14 +50,14 @@ public class SetupLogic extends AbstractBaseLogic {
                     .publicKey(SetupConfig.CFG_SLOG_MODULUS, SetupConfig.CFG_SLOG_EXPONENT)
                     .build());
 
-            OtpConfiguration otpConfiguration = new OtpConfiguration.Builder()
+            final OtpConfiguration otpConfiguration = new OtpConfiguration.Builder()
                     .setRootPolicy(OtpConfiguration.TokenRootPolicy.IGNORE).build();
             IdpCore.configure(SetupConfig.getActivationCode(), otpConfiguration);
 
             // Login to PasswordManager
             try {
                 IdpCore.getInstance().getPasswordManager().login();
-            } catch (PasswordManagerException exception) {
+            } catch (final PasswordManagerException exception) {
                 // Usually it means, that someone try to login with different password than last time.
                 // Password was changes etc..
                 throw new IllegalStateException(exception);

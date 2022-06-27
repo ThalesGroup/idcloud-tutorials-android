@@ -109,21 +109,6 @@ public class BiometricIdActivity extends QrCodeBasicActivity {
 
     //endregion
 
-    //region Life Cycle
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-
-    }
-
-    //endregion
-
     //region Private Helpers
 
     /**
@@ -157,7 +142,7 @@ public class BiometricIdActivity extends QrCodeBasicActivity {
                 } else {
                     try {
                         token.activateAuthMode(authService.getAuthMode(), authInput);
-                    } catch (IdpException exception) {
+                    } catch (final IdpException exception) {
                         displayMessageDialog(exception);
                     }
                 }

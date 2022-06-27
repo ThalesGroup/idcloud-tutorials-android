@@ -74,21 +74,19 @@ public class OobRegistrationLogic extends OobSetupLogic {
      * @param regCode           Registration code received from Bank portal.
      * @param completionHandler Handled on which UI part should be notified about result.
      */
-    public synchronized static void registerToMsm(
-            @NonNull String userId,
-            @NonNull String regCode,
-            @NonNull GenericHandler completionHandler
-    ) {
-        MobileMessenger messenger = getMobileMessenger();
+    public synchronized static void registerToMsm(@NonNull final String userId,
+                                                  @NonNull final String regCode,
+                                                  @NonNull final GenericHandler completionHandler) {
+        final MobileMessenger messenger = getMobileMessenger();
         messenger.register(userId, userId, regCode, null,
                 new RegistrationCallback() {
                     @Override
-                    public void onRegistrationResponse(@NonNull RegistrationResponse response) {
-                        String clientId = response.getClientId();
+                    public void onRegistrationResponse(@NonNull final RegistrationResponse response) {
+                        final String clientId = response.getClientId();
                         storeClientId(clientId);
 
                         // FCM token is valid?
-                        String fcmToken = readFcmPushToken();
+                        final String fcmToken = readFcmPushToken();
                         if (fcmToken == null) {
                             completionHandler.onFinished(false, "FCM token is not available!");
                             return;
@@ -99,8 +97,8 @@ public class OobRegistrationLogic extends OobSetupLogic {
                     }
 
                     @Override
-                    public void onError(@NonNull FastTrackException e) {
-                        completionHandler.onFinished(false, e.getLocalizedMessage());
+                    public void onError(@NonNull final FastTrackException exception) {
+                        completionHandler.onFinished(false, exception.getLocalizedMessage());
                     }
                 }
         );
@@ -109,15 +107,15 @@ public class OobRegistrationLogic extends OobSetupLogic {
     /**
      * @param completionHandler Handled on which UI part should be notified about result.
      */
-    public static void unregisterFromMsm(@NonNull GenericHandler completionHandler) {
+    public static void unregisterFromMsm(@NonNull final GenericHandler completionHandler) {
         do {
-            String clientId = readClientId();
+            final String clientId = readClientId();
             if (clientId == null) {
                 completionHandler.onFinished(true, null);
                 break;
             }
 
-            MobileMessenger messenger = getMobileMessenger();
+            final MobileMessenger messenger = getMobileMessenger();
             messenger.unregister(clientId, null,
                     new MobileMessengerCallback() {
                         @Override
@@ -127,8 +125,8 @@ public class OobRegistrationLogic extends OobSetupLogic {
                         }
 
                         @Override
-                        public void onError(FastTrackException e) {
-                            completionHandler.onFinished(false, e.getLocalizedMessage());
+                        public void onError(final FastTrackException exception) {
+                            completionHandler.onFinished(false, exception.getLocalizedMessage());
                         }
                     }
             );
@@ -140,34 +138,35 @@ public class OobRegistrationLogic extends OobSetupLogic {
      *
      * @param fcmPushToken Updated Firebase push token, which should be updated also on server side.
      */
-    static synchronized void updateNotificationProfile(@NonNull String fcmPushToken) {
+    static synchronized void updateNotificationProfile(@NonNull final String fcmPushToken) {
         // Store token and update notification profile if user is registered
         storeFcmPushToken(fcmPushToken);
 
         // Client id is null mean, that user is not yet registered.
-        String clientId = readClientId();
-        if (clientId != null)
+        final String clientId = readClientId();
+        if (clientId != null) {
             registerOOBClientId(clientId, fcmPushToken, null);
+        }
     }
 
-    private static void registerOOBClientId(
-            @NonNull String clientId,
-            @NonNull String pushToken,
-            @Nullable GenericHandler completionHandler
-    ) {
-        MobileMessenger messenger = getMobileMessenger();
+    private static void registerOOBClientId(@NonNull final String clientId,
+                                            @NonNull final String pushToken,
+                                            @Nullable final GenericHandler completionHandler) {
+        final MobileMessenger messenger = getMobileMessenger();
         messenger.refreshToken(clientId, OobRegistrationConfig.getOobChannel(), pushToken, null,
                 new MobileMessengerCallback() {
                     @Override
                     public void onSuccess() {
-                        if (completionHandler != null)
+                        if (completionHandler != null) {
                             completionHandler.onFinished(true, null);
+                        }
                     }
 
                     @Override
-                    public void onError(FastTrackException exception) {
-                        if (completionHandler != null)
+                    public void onError(final FastTrackException exception) {
+                        if (completionHandler != null) {
                             completionHandler.onFinished(false, exception.getLocalizedMessage());
+                        }
                     }
                 }
         );
@@ -180,10 +179,11 @@ public class OobRegistrationLogic extends OobSetupLogic {
      *
      * @param pushToken Firebase push token to store.
      */
-    private static void storeFcmPushToken(String pushToken) {
-        SharedPreferences pref = getSharedPrefs();
-        if (pref != null)
+    private static void storeFcmPushToken(final String pushToken) {
+        final SharedPreferences pref = getSharedPrefs();
+        if (pref != null) {
             pref.edit().putString(PUSH_TOKEN, pushToken).apply();
+        }
     }
 
     /**
@@ -193,7 +193,7 @@ public class OobRegistrationLogic extends OobSetupLogic {
      */
     private static @Nullable
     String readFcmPushToken() {
-        SharedPreferences pref = getSharedPrefs();
+        final SharedPreferences pref = getSharedPrefs();
         return pref != null ? pref.getString(PUSH_TOKEN, null) : null;
     }
 
@@ -202,15 +202,16 @@ public class OobRegistrationLogic extends OobSetupLogic {
      *
      * @param clientId Client id to store, null to remove the value
      */
-    private static void storeClientId(String clientId) {
-        SharedPreferences pref = getSharedPrefs();
+    private static void storeClientId(final String clientId) {
+        final SharedPreferences pref = getSharedPrefs();
         if (pref != null) {
-            SharedPreferences.Editor editor = pref.edit();
+            final SharedPreferences.Editor editor = pref.edit();
 
-            if (clientId != null)
+            if (clientId != null) {
                 editor.putString(CLIENT_ID, clientId);
-            else
+            } else {
                 editor.remove(CLIENT_ID);
+            }
 
             editor.apply();
         }
@@ -223,7 +224,7 @@ public class OobRegistrationLogic extends OobSetupLogic {
      */
     protected static @Nullable
     String readClientId() {
-        SharedPreferences pref = getSharedPrefs();
+        final SharedPreferences pref = getSharedPrefs();
         return pref != null ? pref.getString(CLIENT_ID, null) : null;
     }
     //endregion

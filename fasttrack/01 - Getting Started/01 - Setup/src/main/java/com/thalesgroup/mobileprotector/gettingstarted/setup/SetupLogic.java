@@ -42,10 +42,14 @@ public class SetupLogic extends BaseLogic {
      * Setups Mobile Protector SDK.
      */
     public static void setup() {
-        if (FastTrack.isConfigured()) return;
+        if (FastTrack.isConfigured()) {
+            return;
+        }
 
-        Context context = getContext();
-        if (context == null) return;
+        final Context context = getContext();
+        if (context == null) {
+            return;
+        }
 
         FastTrack.configureSecureLog(new SecureLogConfig.Builder(context)
                 .publicKey(SetupConfig.CFG_SLOG_MODULUS, SetupConfig.CFG_SLOG_EXPONENT)

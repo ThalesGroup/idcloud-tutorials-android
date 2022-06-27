@@ -53,9 +53,10 @@ public class OobSetupActivity extends TransactionSignActivity {
     public void setup() {
         super.setup();
 
-        MobileMessenger messenger = OobSetupLogic.getMobileMessenger();
-        if (messenger != null)
+        final MobileMessenger messenger = OobSetupLogic.getMobileMessenger();
+        if (messenger != null) {
             displayMessageDialog(getString(R.string.tutorials_oob_setup_completed));
+        }
     }
 
     //endregion

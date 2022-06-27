@@ -56,14 +56,14 @@ public class OobRegistrationActivity extends OobSetupActivity {
     //region Life Cycle
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         // Initialize Firebase app
         FirebaseApp.initializeApp(this);
 
-        boolean enabled = OobRegistrationLogic.isFCMTokenValid();
-        View btnProvision = findViewById(R.id.fragment_provisioning_btn_provision);
+        final boolean enabled = OobRegistrationLogic.isFCMTokenValid();
+        final View btnProvision = findViewById(R.id.fragment_provisioning_btn_provision);
         btnProvision.setEnabled(enabled);
 
         // Only enable Provision when FCM token is valid
@@ -82,7 +82,7 @@ public class OobRegistrationActivity extends OobSetupActivity {
     //region ProvisioningFragmentDelegate
 
     @Override
-    public void onProvision(String userId, String registrationCode) {
+    public void onProvision(final String userId, final String registrationCode) {
         // Show registration process.
         loadingBarShow(R.string.loading_registering);
 

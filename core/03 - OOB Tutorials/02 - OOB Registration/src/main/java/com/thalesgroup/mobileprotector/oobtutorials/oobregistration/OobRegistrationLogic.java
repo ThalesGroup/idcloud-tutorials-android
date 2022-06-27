@@ -66,19 +66,16 @@ public class OobRegistrationLogic extends AbstractBaseLogic {
      * @return Returns {@link OobManager} object.
      */
     public static OobManager initializeOOBManager() {
-        OobManager manager;
         try {
-            manager = OobModule.create().createOobManager(new URL(OobRegistrationConfig.getOobRegistrationUrl()),
+            return OobModule.create().createOobManager(new URL(OobRegistrationConfig.getOobRegistrationUrl()),
                     OobRegistrationConfig.getOobDomain(),
                     OobRegistrationConfig.getOobAppId(),
                     OobRegistrationConfig.getOobRsaKeyExponent(),
                     OobRegistrationConfig.getOobRsaKeyModulus());
-        } catch (MalformedURLException e) {
+        } catch (final MalformedURLException exception) {
             // bad url at compile time - should not happen
-            throw new IllegalStateException(e);
+            throw new IllegalStateException(exception);
         }
-
-        return manager;
     }
 
     /**

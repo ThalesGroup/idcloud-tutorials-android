@@ -44,10 +44,14 @@ public class AdvancedSetupLogic extends BaseLogic {
      */
     public static void setup() {
         //region FastTrack configuration
-        if (FastTrack.isConfigured()) return;
+        if (FastTrack.isConfigured()) {
+            return;
+        }
 
-        Context context = getContext();
-        if (context == null) return;
+        final Context context = getContext();
+        if (context == null) {
+            return;
+        }
 
         FastTrack.configureSecureLog(
                 new SecureLogConfig.Builder(context)
@@ -55,14 +59,16 @@ public class AdvancedSetupLogic extends BaseLogic {
                         .build()
         );
 
-        FastTrack.Builder builder = new FastTrack.Builder(context)
+        final FastTrack.Builder builder = new FastTrack.Builder(context)
                 .withActivationCode(SetupConfig.getActivationCode());
 
-        if (AdvancedSetupConfig.getMspObfuscationCode() != null)
+        if (AdvancedSetupConfig.getMspObfuscationCode() != null) {
             builder.withMspObfuscationKeys(AdvancedSetupConfig.getMspObfuscationCode());
+        }
 
-        if (AdvancedSetupConfig.getMspSignKeys() != null)
+        if (AdvancedSetupConfig.getMspSignKeys() != null) {
             builder.withMspVerificationKeys(AdvancedSetupConfig.getMspSignKeys());
+        }
 
         builder.build();
         //endregion

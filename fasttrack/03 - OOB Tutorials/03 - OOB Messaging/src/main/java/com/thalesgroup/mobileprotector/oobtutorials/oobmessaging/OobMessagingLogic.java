@@ -61,46 +61,50 @@ public class OobMessagingLogic extends OobRegistrationLogic {
 
     private static OobMessageListener sOobListener = null;
 
-    public static void setCurrentOobListener(OobMessageListener listener) {
+    public static void setCurrentOobListener(final OobMessageListener listener) {
         sOobListener = listener;
     }
 
     public static void fetchMessages() {
         // Fetching make sense only with registered listener.
-        if (sOobListener == null)
+        if (sOobListener == null) {
             throw new IllegalStateException(getString(R.string.oob_listener_not_set));
+        }
 
-        String clientId = readClientId();
-        if (clientId == null)
+        final String clientId = readClientId();
+        if (clientId == null) {
             throw new IllegalStateException("ClientID is null!");
+        }
 
-        MobileMessenger messenger = getMobileMessenger();
+        final MobileMessenger messenger = getMobileMessenger();
 
         // Display loading bar to indicate message downloading.
         sOobListener.onOobLoadingShow(R.string.loading_fetch);
 
-        MobileMessageManager messageManager = messenger.getMessageManager(clientId, OobRegistrationConfig.getOobProviderId());
-        if (messageManager == null)
+        final MobileMessageManager messageManager = messenger.getMessageManager(clientId, OobRegistrationConfig.getOobProviderId());
+        if (messageManager == null) {
             throw new IllegalStateException("Failed to retrieve MobileMessageManager");
+        }
 
-        Handler handler = new Handler(Looper.getMainLooper());
+        final Handler handler = new Handler(Looper.getMainLooper());
 
-        FetchMessageCallback callback = new FetchMessageCallback() {
+        final FetchMessageCallback callback = new FetchMessageCallback() {
             @Override
-            public void onFetchResponse(@NonNull FetchResponse response) {
+            public void onFetchResponse(@NonNull final FetchResponse response) {
                 handler.post(() -> {
                     sOobListener.onOobLoadingHide();
 
-                    if (response.isSuccess())
+                    if (response.isSuccess()) {
                         processIncomingRequest(messageManager, response);
+                    }
                 });
             }
 
             @Override
-            public void onError(@NonNull FastTrackException ex) {
+            public void onError(@NonNull final FastTrackException exception) {
                 handler.post(() -> {
                     sOobListener.onOobLoadingHide();
-                    sOobListener.onOobDisplayMessage(ex.getLocalizedMessage());
+                    sOobListener.onOobDisplayMessage(exception.getLocalizedMessage());
                 });
             }
         };
@@ -109,11 +113,9 @@ public class OobMessagingLogic extends OobRegistrationLogic {
         messageManager.fetchMessage(30, null, callback);
     }
 
-    public static OtpValue generateOtp(
-            @NonNull OathTokenDevice token,
-            @NonNull String pin,
-            String serverChallenge
-    ) throws FastTrackException {
+    public static OtpValue generateOtp(@NonNull final OathTokenDevice token,
+                                       @NonNull final String pin,
+                                       final String serverChallenge) throws FastTrackException {
 
         return new OtpValue(token.getOcraOtp(pin, serverChallenge, null, null, null),
                 token.getLastOtpLifeSpan(),
@@ -121,23 +123,25 @@ public class OobMessagingLogic extends OobRegistrationLogic {
         );
     }
 
-    private static void processIncomingRequest(
-            MobileMessageManager messageManager,
-            FetchResponse response
-    ) {
-        IncomingMessage.Type type = response.getMessageType();
+    private static void processIncomingRequest(final MobileMessageManager messageManager,
+                                               final FetchResponse response) {
+        final IncomingMessage.Type type = response.getMessageType();
         switch (type) {
             case TRANSACTION_SIGNING_REQUEST: {
-                TransactionSigningRequest signingRequest = response.getTransactionSigningRequest();
-                if (signingRequest == null) break;
+                final TransactionSigningRequest signingRequest = response.getTransactionSigningRequest();
+                if (signingRequest == null) {
+                    break;
+                }
 
                 processTransactionSigningRequest(messageManager, signingRequest);
                 break;
             }
 
             case TRANSACTION_VERIFY_REQUEST: {
-                TransactionVerifyRequest verifyRequest = response.getTransactionVerifyRequest();
-                if (verifyRequest == null) break;
+                final TransactionVerifyRequest verifyRequest = response.getTransactionVerifyRequest();
+                if (verifyRequest == null) {
+                    break;
+                }
 
                 // Sample implementation
                 break;
@@ -149,35 +153,35 @@ public class OobMessagingLogic extends OobRegistrationLogic {
         }
     }
 
-    private static String getStringByKeyName(String aString) {
-        Context context = ApplicationContextHolder.getContext();
-        int resId = context.getResources().getIdentifier(aString, "string", context.getPackageName());
-        if (resId == 0)
+    private static String getStringByKeyName(final String aString) {
+        final Context context = ApplicationContextHolder.getContext();
+        final int resId = context.getResources().getIdentifier(aString, "string", context.getPackageName());
+        if (resId == 0) {
             return context.getString(R.string.message_not_found);
+        }
 
         return context.getString(resId);
     }
 
-    private static void processTransactionSigningRequest(
-            MobileMessageManager messageManager,
-            TransactionSigningRequest request
-    ) {
+    private static void processTransactionSigningRequest(final MobileMessageManager messageManager,
+                                                         final TransactionSigningRequest request) {
         // Get message subject key and fill in all values.
         String subject = getStringByKeyName(request.getSubject());
         if (request.getMeta() != null) {
-            for (String key : request.getMeta().keySet()) {
-                String value = request.getMeta().get(key);
+            for (final String key : request.getMeta().keySet()) {
+                final String value = request.getMeta().get(key);
                 if (value != null) {
-                    String placeholder = String.format("%%%s", key);
+                    final String placeholder = String.format("%%%s", key);
                     subject = subject.replace(placeholder, value);
                 }
             }
         }
 
-        byte[] challengeBytes = request.getOcraServerChallenge();
+        final byte[] challengeBytes = request.getOcraServerChallenge();
         String serverChallenge = null;
-        if (challengeBytes != null)
+        if (challengeBytes != null) {
             serverChallenge = new String(challengeBytes, StandardCharsets.UTF_8);
+        }
 
         sOobListener.onOobApproveMessage(subject,
                 serverChallenge,
@@ -185,11 +189,11 @@ public class OobMessagingLogic extends OobRegistrationLogic {
                     // Display loading bar to indicate message sending.
                     sOobListener.onOobLoadingShow(R.string.loading_sending);
 
-                    String otp = otpValue != null ? otpValue.getOtp() : null;
+                    final String otp = otpValue != null ? otpValue.getOtp() : null;
 
                     // If we get OTP it mean, that user did approved request.
                     try {
-                        OutgoingMessage responseMsg = request.createResponse(
+                        final OutgoingMessage responseMsg = request.createResponse(
                                 otp != null ? TransactionSigningResponse.TransactionSigningResponseValue.ACCEPTED
                                         : TransactionSigningResponse.TransactionSigningResponseValue.REJECTED,
                                 otp, null);
@@ -197,7 +201,7 @@ public class OobMessagingLogic extends OobRegistrationLogic {
                         messageManager.sendMessage(responseMsg, null,
                                 new SendMessageCallback() {
                                     @Override
-                                    public void onSendMessageResponse(SendResponse response) {
+                                    public void onSendMessageResponse(final SendResponse response) {
                                         // Hide the loading message
                                         sOobListener.onOobLoadingHide();
 
@@ -205,14 +209,14 @@ public class OobMessagingLogic extends OobRegistrationLogic {
                                     }
 
                                     @Override
-                                    public void onError(FastTrackException ex) {
+                                    public void onError(final FastTrackException exception) {
                                         // Hide the loading message
                                         sOobListener.onOobLoadingHide();
 
-                                        sOobListener.onOobDisplayMessage(ex.getLocalizedMessage());
+                                        sOobListener.onOobDisplayMessage(exception.getLocalizedMessage());
                                     }
                                 });
-                    } catch (FastTrackException ex) {
+                    } catch (final FastTrackException ex) {
                         // Hide the loading message
                         sOobListener.onOobLoadingHide();
 

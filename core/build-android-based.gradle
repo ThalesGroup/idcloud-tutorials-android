@@ -4,7 +4,7 @@ allprojects {
     ext {
         propBuildToolsVersion = "30.0.1"
         propCompileSdkVersion = 30
-        propMinSdkVersion = 22
+        propMinSdkVersion = 23
         propTargetSdkVersion = 30
 
         propVersionCode = 600

@@ -27,6 +27,8 @@
 
 package com.thalesgroup.mobileprotector.tutorials.biometricid;
 
+import static android.hardware.fingerprint.FingerprintManager.FINGERPRINT_ERROR_CANCELED;
+
 import android.os.CancellationSignal;
 import android.support.annotation.NonNull;
 
@@ -44,8 +46,6 @@ import com.thalesgroup.mobileprotector.commonutils.helpers.TokenStatus;
 import com.thalesgroup.mobileprotector.gettingstarted.provisioning.ProvisioningLogic;
 import com.thalesgroup.mobileprotector.tutorials.BiometricIdActivity;
 import com.thalesgroup.mobileprotector.tutorials.FragmentBioFingerprint;
-
-import static android.hardware.fingerprint.FingerprintManager.FINGERPRINT_ERROR_CANCELED;
 
 /**
  * Logic for handling Biometric use cases.
@@ -65,15 +65,15 @@ public class BiometricIdLogic extends AbstractBaseLogic {
         final SoftOathToken token = ProvisioningLogic.getToken();
         try {
             // Check all auth mode states so we can enable / disable proper buttons.
-            AuthenticationModule authenticationModule = AuthenticationModule.create();
+            final AuthenticationModule authenticationModule = AuthenticationModule.create();
             // Create an object that represents fingerprint authentication service
-            BioFingerprintAuthService touchService = BioFingerprintAuthService.create(authenticationModule);
+            final BioFingerprintAuthService touchService = BioFingerprintAuthService.create(authenticationModule);
 
             tokenStatus.setTouchSupported(token != null && touchService.isSupported() && touchService.isConfigured());
             tokenStatus.setTouchEnabled(token != null && tokenStatus.isTouchSupported() && token
                     .isAuthModeActive(touchService.getAuthMode()));
 
-        } catch (IdpException exception) {
+        } catch (final IdpException exception) {
             // TODO: Error
         }
         return tokenStatus;
@@ -87,16 +87,14 @@ public class BiometricIdLogic extends AbstractBaseLogic {
      * @param callback Auth / Error completion handler.
      */
     @SuppressWarnings("deprecation")
-    public static void getUserTouchId(
-            @NonNull final BiometricIdActivity activity,
-            @NonNull OathToken token,
-            @NonNull final AuthInputHandler callback
-    ) {
-        BioFingerprintAuthService service = BioFingerprintAuthService.create(AuthenticationModule.create());
-        BioFingerprintContainer container = service.getBioFingerprintContainer();
+    public static void getUserTouchId(@NonNull final BiometricIdActivity activity,
+                                      @NonNull final OathToken token,
+                                      @NonNull final AuthInputHandler callback) {
+        final BioFingerprintAuthService service = BioFingerprintAuthService.create(AuthenticationModule.create());
+        final BioFingerprintContainer container = service.getBioFingerprintContainer();
         final CancellationSignal cancelSignal = new CancellationSignal();
 
-        FragmentBioFingerprint fpFragment = FragmentBioFingerprint
+        final FragmentBioFingerprint fpFragment = FragmentBioFingerprint
                 .create(new FragmentBioFingerprint.BioFpFragmentCallback() {
                     @Override
                     public void onPinFallback() {

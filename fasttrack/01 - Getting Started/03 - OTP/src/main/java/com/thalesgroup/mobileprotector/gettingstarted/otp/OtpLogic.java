@@ -50,10 +50,8 @@ public class OtpLogic extends BaseLogic {
      * @return Generated OTP.
      * @throws FastTrackException If error during OTP generation occurs.
      */
-    public static OtpValue generateOtp(
-            @NonNull OathTokenDevice token,
-            @NonNull String pin
-    ) throws FastTrackException {
+    public static OtpValue generateOtp(@NonNull final OathTokenDevice token,
+                                       @NonNull final String pin) throws FastTrackException {
         return new OtpValue(token.getOtp(pin), token.getLastOtpLifeSpan(), ProvisioningConfig.getOtpLifespan());
     }
 
@@ -65,10 +63,8 @@ public class OtpLogic extends BaseLogic {
      * @return Generated OTP.
      * @throws FastTrackException If error during OTP generation occurs.
      */
-    public static OtpValue generateOtpWithAuthInput(
-            @NonNull OathTokenDevice token,
-            @NonNull ProtectorAuthInput authInput
-    ) throws FastTrackException {
+    public static OtpValue generateOtpWithAuthInput(@NonNull final OathTokenDevice token,
+                                                    @NonNull final ProtectorAuthInput authInput) throws FastTrackException {
         return new OtpValue(token.getOtp(authInput), token.getLastOtpLifeSpan(), ProvisioningConfig.getOtpLifespan());
     }
 }

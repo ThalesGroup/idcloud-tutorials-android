@@ -100,9 +100,7 @@ public class TransactionSignLogic extends AbstractBaseLogic {
     public static OtpValue generateOtp(@NonNull final SoftOathToken token,
                                        @NonNull final AuthInput pin,
                                        @NonNull final String amount,
-                                       @NonNull final String beneficiary)
-            throws IdpException {
-
+                                       @NonNull final String beneficiary) throws IdpException {
         if (IdpCore.getInstance().getRootDetector().getRootStatus() != RootDetector.RootStatus.NOT_ROOTED) { //NOPMD
             // Handle root status according to app policy.
         }
@@ -139,7 +137,7 @@ public class TransactionSignLogic extends AbstractBaseLogic {
         values.add(new KeyValue("amount", amount));
         values.add(new KeyValue("beneficiary", beneficiary));
 
-        return IdpCore.getInstance().getSecureContainerFactory().fromString((getOcraChallenge(values)));
+        return IdpCore.getInstance().getSecureContainerFactory().fromString(getOcraChallenge(values));
     }
 
     /**

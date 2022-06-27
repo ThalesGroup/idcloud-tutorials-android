@@ -75,31 +75,27 @@ public class InBandVerificationLogic extends ProvisioningLogic {
      * @param pin               PIN as String
      * @param completionHandler Completion handler triggered in UI thread once operation is done.
      */
-    public static void verifyWithToken(
-            OathTokenDevice token,
-            String pin,
-            GenericOtpHandler completionHandler
-    ) {
+    public static void verifyWithToken(final OathTokenDevice token,
+                                       final String pin,
+                                       final GenericOtpHandler completionHandler) {
         try {
-            OtpValue otpValue = OtpLogic.generateOtp(token, pin);
-            String userId = getIdCloudUserId();
+            final OtpValue otpValue = OtpLogic.generateOtp(token, pin);
+            final String userId = getIdCloudUserId();
 
             verifyOTP(userId, otpValue, completionHandler);
-        } catch (FastTrackException exception) {
+        } catch (final FastTrackException exception) {
             completionHandler.onFinished(false, exception.getMessage(), null);
         }
     }
 
-    private static void verifyOTP(
-            String userId,
-            OtpValue otpValue,
-            GenericOtpHandler callback
-    ) {
-        Map<String, String> headers = new HashMap<>();
+    private static void verifyOTP(final String userId,
+                                  final OtpValue otpValue,
+                                  final GenericOtpHandler callback) {
+        final Map<String, String> headers = new HashMap<>();
         headers.put("Authorization", String.format(Locale.US, "Bearer %s", InBandVerificationConfig.JWT));
         headers.put("X-API-KEY", InBandVerificationConfig.API_KEY);
 
-        String jsonRequest = String.format(Locale.US, JSON_REQUEST, userId, otpValue.getOtp());
+        final String jsonRequest = String.format(Locale.US, JSON_REQUEST, userId, otpValue.getOtp());
 
         ExecutionService.getExecutionService().runOnBackgroundThread(
                 () -> doPostRequest(
@@ -107,14 +103,15 @@ public class InBandVerificationLogic extends ProvisioningLogic {
                         headers,
                         jsonRequest,
                         (success, result) -> {
-                            Context context = getContext();
+                            final Context context = getContext();
                             assert context != null;
 
-                            boolean valid = success && result.contains("\"status\":\"Success\",");
-                            if (!valid)
+                            final boolean valid = success && result.contains("\"status\":\"Success\",");
+                            if (!valid) {
                                 result = context.getString(R.string.otp_verify_fail);
-                            else
+                            } else {
                                 result = context.getString(R.string.otp_verify_success);
+                            }
 
                             callback.onFinished(valid, result, otpValue.getLifespan());
                         }
@@ -122,16 +119,14 @@ public class InBandVerificationLogic extends ProvisioningLogic {
         );
     }
 
-    private static HttpURLConnection createConnection(
-            @NonNull String hostUrl,
-            @NonNull Map<String, String> headers
-    ) throws IOException {
-        URL url = new URL(hostUrl);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+    private static HttpURLConnection createConnection(@NonNull final String hostUrl,
+                                                      @NonNull final Map<String, String> headers) throws IOException {
+        final URL url = new URL(hostUrl);
+        final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
-        for (Map.Entry<String, String> entry : headers.entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
+        for (final Map.Entry<String, String> entry : headers.entrySet()) {
+            final String key = entry.getKey();
+            final String value = entry.getValue();
             connection.setRequestProperty(key, value);
         }
 
@@ -145,16 +140,17 @@ public class InBandVerificationLogic extends ProvisioningLogic {
         return connection;
     }
 
-    private static String convertStreamToString(InputStream inputStream) throws IOException {
+    private static String convertStreamToString(final InputStream inputStream) throws IOException {
         String response = "";
 
         do {
-            if (inputStream == null)
+            if (inputStream == null) {
                 break;
+            }
 
-            Writer writer = new StringWriter();
+            final Writer writer = new StringWriter();
 
-            char[] buffer = new char[1024];
+            final char[] buffer = new char[1024];
             try (Reader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8), 1024)) {
                 int numberOfCharacters = reader.read(buffer);
                 while (numberOfCharacters != -1) {
@@ -177,23 +173,21 @@ public class InBandVerificationLogic extends ProvisioningLogic {
      * @param body     Body.
      * @param callback Callback back to the application.
      */
-    private static void doPostRequest(
-            @NonNull String hostUrl,
-            @NonNull Map<String, String> headers,
-            @NonNull String body,
-            @NonNull GenericHandler callback
-    ) {
-        ExecutionService service = ExecutionService.getExecutionService();
+    private static void doPostRequest(@NonNull final String hostUrl,
+                                      @NonNull final Map<String, String> headers,
+                                      @NonNull final String body,
+                                      @NonNull final GenericHandler callback) {
+        final ExecutionService service = ExecutionService.getExecutionService();
 
         try {
-            HttpURLConnection connection = createConnection(hostUrl, headers);
+            final HttpURLConnection connection = createConnection(hostUrl, headers);
 
             try (OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream())) {
                 writer.write(body);
                 writer.flush();
             }
 
-            int statusCode = connection.getResponseCode();
+            final int statusCode = connection.getResponseCode();
             String responseBody;
             if (statusCode > 226) {
                 responseBody = "";
@@ -202,7 +196,7 @@ public class InBandVerificationLogic extends ProvisioningLogic {
             }
 
             service.runOnMainUiThread(() -> callback.onFinished(true, responseBody));
-        } catch (IOException exception) {
+        } catch (final IOException exception) {
             service.runOnMainUiThread(() -> callback.onFinished(false, exception.getMessage()));
         }
     }

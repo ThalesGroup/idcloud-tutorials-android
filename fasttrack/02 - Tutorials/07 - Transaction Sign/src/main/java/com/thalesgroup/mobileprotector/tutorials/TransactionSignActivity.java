@@ -80,17 +80,20 @@ public class TransactionSignActivity extends SecureKeypadActivity {
     @Override
     protected OathTokenDevice updateGui() {
         // Get stored token
-        OathTokenDevice token = super.updateGui();
+        final OathTokenDevice token = super.updateGui();
 
         // To make demo simple we will just disable / enable UI.
-        if (mBtnGenerateOtp != null)
+        if (mBtnGenerateOtp != null) {
             mBtnGenerateOtp.setEnabled(token != null);
+        }
 
-        if (mEditAmount != null)
+        if (mEditAmount != null) {
             mEditAmount.setEnabled(token != null);
+        }
 
-        if (mEditBeneficiary != null)
+        if (mEditBeneficiary != null) {
             mEditBeneficiary.setEnabled(token != null);
+        }
 
         return token;
     }
@@ -99,20 +102,18 @@ public class TransactionSignActivity extends SecureKeypadActivity {
 
     //region Shared
 
-    protected void generateAndDisplaySignatureOtp(
-            String pin,
-            String amount,
-            String beneficiary
-    ) {
+    protected void generateAndDisplaySignatureOtp(final String pin,
+                                                  final String amount,
+                                                  final String beneficiary) {
         try {
-            OtpValue otpValue = TransactionSignLogic.generateOtp(
+            final OtpValue otpValue = TransactionSignLogic.generateOtp(
                     pin,
                     amount,
                     beneficiary
             );
 
             displayMessageResult(otpValue.getOtp(), otpValue.getLifespan());
-        } catch (FastTrackException exception) {
+        } catch (final FastTrackException exception) {
             displayMessageDialog(exception);
         }
     }

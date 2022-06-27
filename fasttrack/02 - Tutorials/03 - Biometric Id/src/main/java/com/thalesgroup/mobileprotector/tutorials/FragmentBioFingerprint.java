@@ -73,14 +73,14 @@ public final class FragmentBioFingerprint extends DialogFragment {
 
     //region Life Cycle
 
-    public static FragmentBioFingerprint create(BioFpFragmentCallback delegate) {
-        FragmentBioFingerprint retValue = new FragmentBioFingerprint();
+    public static FragmentBioFingerprint create(final BioFpFragmentCallback delegate) {
+        final FragmentBioFingerprint retValue = new FragmentBioFingerprint();
         retValue.mDelegate = delegate;
         return retValue;
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setRetainInstance(true);
@@ -88,18 +88,17 @@ public final class FragmentBioFingerprint extends DialogFragment {
     }
 
     @Override
-    public View onCreateView(
-            @NonNull LayoutInflater inflater,
-            ViewGroup container,
-            Bundle savedInstanceState
-    ) {
-        Dialog dialog = getDialog();
-        if (dialog != null)
+    public View onCreateView(@NonNull final LayoutInflater inflater,
+                             final ViewGroup container,
+                             final Bundle savedInstanceState) {
+        final Dialog dialog = getDialog();
+        if (dialog != null) {
             dialog.requestWindowFeature(STYLE_NO_TITLE);
+        }
 
         setCancelable(false);
 
-        View retValue = inflater.inflate(R.layout.fragment_fingerprint, container, false);
+        final View retValue = inflater.inflate(R.layout.fragment_fingerprint, container, false);
 
         retValue.findViewById(R.id.button_use_pin).setOnClickListener(onButtonPressedUsePin());
         retValue.findViewById(R.id.button_cancel).setOnClickListener(onButtonPressedCancel());
@@ -157,7 +156,7 @@ public final class FragmentBioFingerprint extends DialogFragment {
 
     //region Private Helpers
 
-    private void setFailures(int failures) {
+    private void setFailures(final int failures) {
         mFailures = failures;
 
         if (mFailures > 0) {

@@ -53,31 +53,34 @@ public class OobPushService extends FirebaseMessagingService {
     //region FirebaseMessagingService
 
     @Override
-    public void onMessageReceived(RemoteMessage remoteMessage) {
-        Map<String, String> data = remoteMessage.getData();
+    public void onMessageReceived(final RemoteMessage remoteMessage) {
+        final Map<String, String> data = remoteMessage.getData();
 
         Log.w(TAG, "onMessageReceived --> FCM received message: " + data);
 
         // Ignore non data notifications.
-        if (data == null)
+        if (data == null) {
             return;
+        }
 
-        if (OobRegistrationLogic.sOobPushCallback != null)
+        if (OobRegistrationLogic.sOobPushCallback != null) {
             OobRegistrationLogic.sOobPushCallback.informPushMessageReceived(data);
+        }
 
         // Process notification
         sendNotification(data);
     }
 
     @Override
-    public void onNewToken(String token) {
+    public void onNewToken(final String token) {
         Log.w(TAG, "OobPushService --> FCM token: " + token);
 
         // NOTE: Need to make sure the FCM token is stored BEFORE executing the provisioning phase!
         OobRegistrationLogic.updateNotificationProfile(token);
 
-        if (OobRegistrationLogic.mFCMTokenCallback != null)
+        if (OobRegistrationLogic.mFCMTokenCallback != null) {
             OobRegistrationLogic.mFCMTokenCallback.onTokenValid();
+        }
     }
 
     //endregion
@@ -89,19 +92,20 @@ public class OobPushService extends FirebaseMessagingService {
      *
      * @param data Received data.
      */
-    private void sendNotification(Map<String, String> data) {
+    private void sendNotification(final Map<String, String> data) {
         // First try to get notification manager.
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        if (notificationManager == null)
+        final NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if (notificationManager == null) {
             return;
+        }
 
-        String channelId = getString(R.string.push_fcm_channel_id);
-        String message = data.containsKey(C_DATA_KEY_MESSAGE) ? data.get(C_DATA_KEY_MESSAGE)
+        final String channelId = getString(R.string.push_fcm_channel_id);
+        final String message = data.containsKey(C_DATA_KEY_MESSAGE) ? data.get(C_DATA_KEY_MESSAGE)
                 : getString(R.string.push_approve_question);
 
         // New android does require channel.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel notificationChannel = new NotificationChannel(channelId,
+            final NotificationChannel notificationChannel = new NotificationChannel(channelId,
                     getString(R.string.push_fcm_channel_name),
                     NotificationManager.IMPORTANCE_HIGH);
 
@@ -115,7 +119,7 @@ public class OobPushService extends FirebaseMessagingService {
         }
 
         // Build final notification.
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, channelId);
+        final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, channelId);
         notificationBuilder
                 .setAutoCancel(true)
                 .setDefaults(Notification.DEFAULT_ALL)

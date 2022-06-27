@@ -36,12 +36,10 @@ import com.thalesgroup.mobileprotector.commonutils.helpers.BaseLogic;
  */
 public class ChangePinLogic extends BaseLogic {
 
-    public static String changePin(
-            OathTokenDevice token,
-            String oldPin,
-            String newPin,
-            String newPinConfirmation
-    ) {
+    public static String changePin(final OathTokenDevice token,
+                                   final String oldPin,
+                                   final String newPin,
+                                   final String newPinConfirmation) {
         String retValue;
 
         // Check both entries consistency.
@@ -50,7 +48,7 @@ public class ChangePinLogic extends BaseLogic {
             try {
                 token.changePin(oldPin, newPin);
                 retValue = getString(R.string.change_pin_success);
-            } catch (FastTrackException exception) {
+            } catch (final FastTrackException exception) {
                 retValue = exception.getMessage();
             }
         } else {

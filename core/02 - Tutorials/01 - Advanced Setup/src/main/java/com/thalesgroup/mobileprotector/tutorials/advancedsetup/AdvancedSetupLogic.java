@@ -65,12 +65,6 @@ public class AdvancedSetupLogic extends AbstractBaseLogic {
         }
     }
 
-    private static void logError(final Exception exception) {
-        Toast.makeText(ApplicationContextHolder.getContext(),
-                exception.getCause() + " : " + exception.getMessage(),
-                Toast.LENGTH_LONG).show();
-    }
-
     /**
      * Gets the configurations for all the required features.
      *

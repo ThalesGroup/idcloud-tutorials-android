@@ -102,12 +102,12 @@ public class SecureKeypadActivity extends InBandVerificationActivity {
     private SecureKeypadListener commonHandler() {
         return new SecureKeypadListener() {
             @Override
-            public void onKeyPressedCountChanged(int count, int inputField) {
+            public void onKeyPressedCountChanged(final int count, final int inputField) {
                 // Handle on key pressed.
             }
 
             @Override
-            public void onInputFieldSelected(int inputField) {
+            public void onInputFieldSelected(final int inputField) {
                 // Handle on input field selected.
             }
 
@@ -122,12 +122,12 @@ public class SecureKeypadActivity extends InBandVerificationActivity {
             }
 
             @Override
-            public void onFinish(PinAuthInput pinAuthInput, PinAuthInput pinAuthInput1) {
+            public void onFinish(final PinAuthInput pinAuthInput, final PinAuthInput pinAuthInput1) {
                 dialogFragmentHide();
             }
 
             @Override
-            public void onError(String errorMessage) {
+            public void onError(final String errorMessage) {
                 dialogFragmentHide();
 
                 // Notify user about possible error.
@@ -166,7 +166,7 @@ public class SecureKeypadActivity extends InBandVerificationActivity {
                 getResources().getColor(R.color.skcButtonGradientColorSelectedStart),
                 getResources().getColor(R.color.skcButtonGradientColorSelectedEnd));
 
-        SecureInputUi secureInputUi = builder.buildKeypad(false, false, false, commonHandler());
+        final SecureInputUi secureInputUi = builder.buildKeypad(false, false, false, commonHandler());
 
         // Display dialog using common method.
         dialogFragmentShow(secureInputUi.getDialogFragment(), DIALOG_TAG_KEYPAD_VARIANT_01, false);
@@ -182,7 +182,7 @@ public class SecureKeypadActivity extends InBandVerificationActivity {
         builder.setKeypadGridGradientColors(
                 getResources().getColor(R.color.skcKeypadGridGradientColorStart_02),
                 getResources().getColor(R.color.skcKeypadGridGradientColorEnd_02));
-        SecureInputUi secureInputUi = builder.buildKeypad(true, true, false, commonHandler());
+        final SecureInputUi secureInputUi = builder.buildKeypad(true, true, false, commonHandler());
 
         // Display dialog using common method.
         dialogFragmentShow(secureInputUi.getDialogFragment(), DIALOG_TAG_KEYPAD_VARIANT_02, false);
@@ -197,7 +197,7 @@ public class SecureKeypadActivity extends InBandVerificationActivity {
         builder.setLabelFontSize(30);
         builder.setLabelAlignment(SecureInputBuilder.LabelAlignment.LEFT);
         builder.setInputFieldBackgroundColor(SecureInputBuilder.UiControlFocusState.FOCUSED, getResources().getColor(R.color.skcInputFieldBackgroundColorFocused));
-        SecureInputUi secureInputUi = builder.buildKeypad(false, true, false, commonHandler());
+        final SecureInputUi secureInputUi = builder.buildKeypad(false, true, false, commonHandler());
 
         // Display dialog using common method.
         dialogFragmentShow(secureInputUi.getDialogFragment(), DIALOG_TAG_KEYPAD_VARIANT_03, false);
@@ -209,12 +209,12 @@ public class SecureKeypadActivity extends InBandVerificationActivity {
         builder.setFirstLabel("Enter Password");
         builder.setMaximumAndMinimumInputLength(16, 6);
         builder.setKeypadMatrix(6, 6);
-        List<Character> mainKeys = Arrays.asList(
+        final List<Character> mainKeys = Arrays.asList(
                 '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
         );
         builder.setKeys(mainKeys, null);
         builder.setIsDeleteButtonAlwaysEnabled(true);
-        SecureInputUi secureInputUi = builder.buildKeypad(true, false, false, commonHandler());
+        final SecureInputUi secureInputUi = builder.buildKeypad(true, false, false, commonHandler());
 
         // Display dialog using common method.
         dialogFragmentShow(secureInputUi.getDialogFragment(), DIALOG_TAG_KEYPAD_VARIANT_04, false);

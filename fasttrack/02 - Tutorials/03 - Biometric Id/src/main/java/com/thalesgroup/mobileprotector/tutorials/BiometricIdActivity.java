@@ -91,8 +91,8 @@ public class BiometricIdActivity extends QrCodeBasicActivity {
     @Override
     protected OathTokenDevice updateGui() {
         // Get stored token
-        OathTokenDevice token = super.updateGui();
-        TokenStatus tokenStatus = BiometricIdLogic.getTokenStatus();
+        final OathTokenDevice token = super.updateGui();
+        final TokenStatus tokenStatus = BiometricIdLogic.getTokenStatus();
 
         if (mBtnGenerateOtpTouch != null && mSwitchTouch != null) {
             mBtnGenerateOtpTouch.setEnabled(tokenStatus.isTouchEnabled());
@@ -113,11 +113,12 @@ public class BiometricIdActivity extends QrCodeBasicActivity {
      * @param isEnabled {@code True} if {@code AuthMode} should be isEnabled, else {@code false}.
      */
     @SuppressWarnings("deprecation")
-    private void enableOrDisableAuthMode(boolean isEnabled) {
+    private void enableOrDisableAuthMode(final boolean isEnabled) {
         // Get currently provisioned token.
-        OathTokenDevice token = ProvisioningLogic.getToken();
-        if (token == null)
+        final OathTokenDevice token = ProvisioningLogic.getToken();
+        if (token == null) {
             throw new IllegalStateException(getString(R.string.token_not_provisioned));
+        }
 
 
         // Auth mode is currently enabled. We want to disable it.
@@ -129,7 +130,7 @@ public class BiometricIdActivity extends QrCodeBasicActivity {
                     token.deActivateBiometricMode();
                 }
                 updateGui();
-            } catch (FastTrackException exception) {
+            } catch (final FastTrackException exception) {
                 displayMessageDialog(exception);
             }
         } else {
@@ -150,9 +151,9 @@ public class BiometricIdActivity extends QrCodeBasicActivity {
      * @param token Token for which to enable multi auth mode.
      */
     @SuppressWarnings("deprecation")
-    private void enableMultiAuth(@NonNull OathTokenDevice token, @NonNull AuthPinHandler callback) {
+    private void enableMultiAuth(@NonNull final OathTokenDevice token, @NonNull final AuthPinHandler callback) {
         // Check whenever multi-auth mode is already enabled.
-        boolean isEnabled = BiometricIdLogic.isBioModeActivated(token);
+        final boolean isEnabled = BiometricIdLogic.isBioModeActivated(token);
 
         // In both cases we will need auth pin, because it's used for
         // multi-auth upgrade as well as enabling specific auth-modes.
@@ -181,9 +182,10 @@ public class BiometricIdActivity extends QrCodeBasicActivity {
 
     private void onButtonPressedGenerateOTPTouch() {
         // Get currently provisioned token.
-        OathTokenDevice token = ProvisioningLogic.getToken();
-        if (token == null)
+        final OathTokenDevice token = ProvisioningLogic.getToken();
+        if (token == null) {
             throw new IllegalStateException(getString(R.string.token_not_provisioned));
+        }
 
         BiometricIdLogic.getUserTouchId(this, token,
                 (authInput, error) -> {

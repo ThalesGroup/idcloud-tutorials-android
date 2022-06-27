@@ -58,8 +58,8 @@ public class BiometricIdLogic extends BaseLogic {
      * @return Current status.
      */
     public static TokenStatus getTokenStatus() {
-        TokenStatus tokenStatus = new TokenStatus();
-        OathTokenDevice token = ProvisioningLogic.getToken();
+        final TokenStatus tokenStatus = new TokenStatus();
+        final OathTokenDevice token = ProvisioningLogic.getToken();
 
         tokenStatus.setTouchSupported(token != null && canAuthenticate());
         tokenStatus.setTouchEnabled(token != null && tokenStatus.isTouchSupported() && isBioModeActivated(token));
@@ -69,17 +69,19 @@ public class BiometricIdLogic extends BaseLogic {
 
     @SuppressWarnings("deprecation")
     public static boolean canAuthenticate() {
-        OathMobileProtector oathMobileProtector = FastTrack.getInstance().getOathMobileProtectorInstance();
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P)
+        final OathMobileProtector oathMobileProtector = FastTrack.getInstance().getOathMobileProtectorInstance();
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
             return oathMobileProtector.isBioFingerprintModeSupported() && oathMobileProtector.isBioFingerprintModeConfigured();
+        }
 
         return oathMobileProtector.canBiometricAuthenticate() == 0;
     }
 
     @SuppressWarnings("deprecation")
-    public static boolean isBioModeActivated(OathTokenDevice oathTokenDevice) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P)
+    public static boolean isBioModeActivated(final OathTokenDevice oathTokenDevice) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
             return oathTokenDevice.isBioFingerprintModeActivated();
+        }
 
         return oathTokenDevice.isBiometricModeActivated();
     }
@@ -92,14 +94,12 @@ public class BiometricIdLogic extends BaseLogic {
      * @param authInputHandler Auth / Error completion handler.
      */
     @SuppressWarnings("deprecation")
-    public static void getUserTouchId(
-            @NonNull final BiometricIdActivity activity,
-            @NonNull OathTokenDevice token,
-            @NonNull final AuthInputHandler authInputHandler,
-            @NonNull final AuthPinHandler authPinHandler
-    ) {
-        CancellationSignal cancelSignal = new CancellationSignal();
-        FragmentBioFingerprint fpFragment = FragmentBioFingerprint
+    public static void getUserTouchId(@NonNull final BiometricIdActivity activity,
+                                      @NonNull final OathTokenDevice token,
+                                      @NonNull final AuthInputHandler authInputHandler,
+                                      @NonNull final AuthPinHandler authPinHandler) {
+        final CancellationSignal cancelSignal = new CancellationSignal();
+        final FragmentBioFingerprint fpFragment = FragmentBioFingerprint
                 .create(new FragmentBioFingerprint.BioFpFragmentCallback() {
                     @Override
                     public void onPinFallback() {
@@ -123,7 +123,7 @@ public class BiometricIdLogic extends BaseLogic {
             token.authenticateWithBioFingerprint(cancelSignal,
                     new BioFingerprintAuthenticationCallbacks() {
                         @Override
-                        public void onSuccess(ProtectorAuthInput bioFingerprintAuthInput) {
+                        public void onSuccess(final ProtectorAuthInput bioFingerprintAuthInput) {
                             activity.dialogFragmentHide();
                             authInputHandler.onFinished(bioFingerprintAuthInput, null);
                         }
@@ -134,7 +134,7 @@ public class BiometricIdLogic extends BaseLogic {
                         }
 
                         @Override
-                        public void onAuthenticationStatus(int status, String message) {
+                        public void onAuthenticationStatus(final int status, final String message) {
                             authInputHandler.onFinished(null, message + " Status: " + status);
                         }
                     });
@@ -147,13 +147,13 @@ public class BiometricIdLogic extends BaseLogic {
                     cancelSignal,
                     new com.gemalto.idp.mobile.fasttrack.protector.BiometricAuthenticationCallbacks() {
                         @Override
-                        public void onSuccess(ProtectorAuthInput protectorAuthInput) {
+                        public void onSuccess(final ProtectorAuthInput protectorAuthInput) {
                             activity.dialogFragmentHide();
                             authInputHandler.onFinished(protectorAuthInput, null);
                         }
 
                         @Override
-                        public void onAuthenticationStatus(int status, String message) {
+                        public void onAuthenticationStatus(final int status, final String message) {
                             authInputHandler.onFinished(null, message + " Status: " + status);
                         }
                     });

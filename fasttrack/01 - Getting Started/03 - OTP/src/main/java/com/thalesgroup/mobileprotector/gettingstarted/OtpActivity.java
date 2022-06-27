@@ -90,7 +90,7 @@ public class OtpActivity extends ProvisioningActivity {
     @Override
     protected OathTokenDevice updateGui() {
         // Get stored token
-        OathTokenDevice token = super.updateGui();
+        final OathTokenDevice token = super.updateGui();
 
         // To make demo simple we will just disable / enable UI.
         if (mBtnGenerateOtp != null) {
@@ -109,10 +109,8 @@ public class OtpActivity extends ProvisioningActivity {
 
     //region Shared
 
-    protected void displayMessageResult(
-            String message,
-            Lifespan lifespan
-    ) {
+    protected void displayMessageResult(final String message,
+                                        final Lifespan lifespan) {
         if (mResultFragment == null) {
             throw new IllegalStateException(getString(R.string.missing_result_fragment));
         }
@@ -120,12 +118,12 @@ public class OtpActivity extends ProvisioningActivity {
         mResultFragment.show(message, lifespan);
     }
 
-    public void userPin(AuthPinHandler callback) {
+    public void userPin(final AuthPinHandler callback) {
         userPin(callback, "Enter PIN");
     }
 
-    public void userPin(AuthPinHandler callback, String title) {
-        EditText input = new EditText(this);
+    public void userPin(final AuthPinHandler callback, final String title) {
+        final EditText input = new EditText(this);
         input.setInputType(InputType.TYPE_CLASS_NUMBER);
         input.setTransformationMethod(PasswordTransformationMethod.getInstance());
         new AlertDialog.Builder(this)
@@ -135,31 +133,32 @@ public class OtpActivity extends ProvisioningActivity {
                         (dialog, which) -> {
                             hideKeyboard(input);
 
-                            String pin = input.getText().toString();
-                            if (!pin.isEmpty())
+                            final String pin = input.getText().toString();
+                            if (!pin.isEmpty()) {
                                 callback.onPinProvided(pin, null);
+                            }
                         }
                 )
                 .show();
     }
 
-    protected void generateAndDisplayOtpWithPin(OathTokenDevice token, String pin) {
+    protected void generateAndDisplayOtpWithPin(final OathTokenDevice token, final String pin) {
         try {
-            OtpValue otpValue = OtpLogic.generateOtp(token, pin);
+            final OtpValue otpValue = OtpLogic.generateOtp(token, pin);
             displayMessageResult(otpValue.getOtp(), otpValue.getLifespan());
-        } catch (FastTrackException exception) {
+        } catch (final FastTrackException exception) {
             displayMessageDialog(exception);
         }
     }
 
     protected void generateAndDisplayOtpWithAuthInput(
-            OathTokenDevice token,
-            ProtectorAuthInput authInput
+            final OathTokenDevice token,
+            final ProtectorAuthInput authInput
     ) {
         try {
-            OtpValue otpValue = OtpLogic.generateOtpWithAuthInput(token, authInput);
+            final OtpValue otpValue = OtpLogic.generateOtpWithAuthInput(token, authInput);
             displayMessageResult(otpValue.getOtp(), otpValue.getLifespan());
-        } catch (FastTrackException exception) {
+        } catch (final FastTrackException exception) {
             displayMessageDialog(exception);
         }
     }

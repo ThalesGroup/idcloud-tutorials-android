@@ -55,13 +55,11 @@ public class OtpActivity extends ProvisioningActivity {
 
     //region Declaration
 
-    private ResultFragment mResultFragment;
-
-    private ImageButton mBtnGenerateOtp;
-
     private static final String DIALOG_TAG_PIN_ENTRY = "DIALOG_TAG_PIN_ENTRY";
 
-    private SecureInputBuilder builder;
+    private ResultFragment mResultFragment;
+    private ImageButton mBtnGenerateOtp;
+    private SecureInputBuilder mSecureInputBuilder;
 
     //endregion
 
@@ -99,7 +97,7 @@ public class OtpActivity extends ProvisioningActivity {
     @Override
     protected SoftOathToken updateGui() {
         // Get stored token
-        SoftOathToken token = super.updateGui();
+        final SoftOathToken token = super.updateGui();
 
         // To make demo simple we will just disable / enable UI.
         if (mBtnGenerateOtp != null) {
@@ -119,8 +117,8 @@ public class OtpActivity extends ProvisioningActivity {
     //region Shared
 
     protected void displayMessageResult(
-            String message,
-            Lifespan lifespan
+            final String message,
+            final Lifespan lifespan
     ) {
         if (mResultFragment == null) {
             throw new IllegalStateException(getString(R.string.missing_result_fragment));
@@ -129,16 +127,16 @@ public class OtpActivity extends ProvisioningActivity {
         mResultFragment.show(message, lifespan);
     }
 
-    public void userPin(AuthPinHandler callback) {
-        builder = SecureInputService.create(UiModule.create()).getSecureInputBuilder();
-        SecureInputUi secureInputUi = builder.buildKeypad(false, false, true, new SecureKeypadListener() {
+    public void userPin(final AuthPinHandler callback) {
+        mSecureInputBuilder = SecureInputService.create(UiModule.create()).getSecureInputBuilder();
+        final SecureInputUi secureInputUi = mSecureInputBuilder.buildKeypad(false, false, true, new SecureKeypadListener() {
             @Override
-            public void onKeyPressedCountChanged(int count, int inputField) {
+            public void onKeyPressedCountChanged(final int count, final int inputField) {
                 // Handle on key pressed if needed.
             }
 
             @Override
-            public void onInputFieldSelected(int inputField) {
+            public void onInputFieldSelected(final int inputField) {
                 // Handle on input field selected if needed.
             }
 
@@ -153,23 +151,23 @@ public class OtpActivity extends ProvisioningActivity {
             }
 
             @Override
-            public void onFinish(PinAuthInput pinAuthInput, PinAuthInput pinAuthInput1) {
+            public void onFinish(final PinAuthInput pinAuthInput, final PinAuthInput pinAuthInput1) {
                 // Hide view and notify handler.
                 dialogFragmentHide();
                 callback.onPinProvided(pinAuthInput);
 
                 // Wipe the builder
-                builder.wipe();
+                mSecureInputBuilder.wipe();
             }
 
             @Override
-            public void onError(String errorMessage) {
+            public void onError(final String errorMessage) {
                 // Hide view and notify handler.
                 dialogFragmentHide();
                 displayMessageDialog(errorMessage);
 
                 // Wipe the builder
-                builder.wipe();
+                mSecureInputBuilder.wipe();
             }
         });
 
@@ -177,19 +175,19 @@ public class OtpActivity extends ProvisioningActivity {
         dialogFragmentShow(secureInputUi.getDialogFragment(), DIALOG_TAG_PIN_ENTRY, false);
     }
 
-    protected void generateAndDisplayOtp(SoftOathToken token, AuthInput authInput) {
+    protected void generateAndDisplayOtp(final SoftOathToken token, final AuthInput authInput) {
         try {
-            OtpValue otpValue = OtpLogic.generateOtp(token, authInput);
+            final OtpValue otpValue = OtpLogic.generateOtp(token, authInput);
             displayMessageResult(otpValue.getOtp().toString(), otpValue.getLifespan());
             otpValue.wipe();
-        } catch (IdpException exception) {
+        } catch (final IdpException exception) {
             displayMessageDialog(exception);
         }
 
         authInput.wipe();
     }
 
-    protected void generateAndDisplayOtp_PinInput() {
+    protected void generateAndDisplayOtpPinInput() {
         // Display pin input dialog.
         userPin(pin -> generateAndDisplayOtp(ProvisioningLogic.getToken(), pin));
     }
@@ -199,7 +197,7 @@ public class OtpActivity extends ProvisioningActivity {
     //region User Interface
 
     private void onButtonPressedGenerateOTPPin() {
-        generateAndDisplayOtp_PinInput();
+        generateAndDisplayOtpPinInput();
     }
 
     //endregion

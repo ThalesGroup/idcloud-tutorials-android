@@ -27,7 +27,10 @@
 
 package com.thalesgroup.mobileprotector.tutorials.inbandverification;
 
+import static com.gemalto.idp.mobile.core.ApplicationContextHolder.getContext;
+
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import com.gemalto.idp.mobile.authentication.AuthInput;
 import com.gemalto.idp.mobile.core.IdpException;
@@ -38,7 +41,6 @@ import com.thalesgroup.mobileprotector.commonutils.helpers.AbstractBaseLogic;
 import com.thalesgroup.mobileprotector.commonutils.helpers.OtpValue;
 import com.thalesgroup.mobileprotector.commonutils.thread.ExecutionService;
 import com.thalesgroup.mobileprotector.gettingstarted.otp.OtpLogic;
-import com.thalesgroup.mobileprotector.gettingstarted.provisioning.ProvisioningLogic;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -54,10 +56,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-
-import android.support.annotation.NonNull;
-
-import static com.gemalto.idp.mobile.core.ApplicationContextHolder.getContext;
 
 /**
  * Logic for user authentication/OTP verification.
@@ -79,11 +77,9 @@ public class InBandVerificationLogic extends AbstractBaseLogic {
      * @param authInput         Selected authentication input.
      * @param completionHandler Completion handler triggered in UI thread once operation is done.
      */
-    public static void verifyWithToken(
-            SoftOathToken token,
-            AuthInput authInput,
-            GenericOtpHandler completionHandler
-    ) {
+    public static void verifyWithToken(final SoftOathToken token,
+                                       final AuthInput authInput,
+                                       final GenericOtpHandler completionHandler) {
         try {
             verifyWithToken(token.getName(), OtpLogic.generateOtp(token, authInput), completionHandler);
         } catch (final IdpException exception) {
@@ -94,20 +90,18 @@ public class InBandVerificationLogic extends AbstractBaseLogic {
     /**
      * Validates generated OTP with authentication server.
      *
-     * @param tokenName         User Id / Token Name
-     * @param otpValue          Generated OTP.
-     * @param callback          Callback to the application
+     * @param tokenName User Id / Token Name
+     * @param otpValue  Generated OTP.
+     * @param callback  Callback to the application
      */
-    private static void verifyWithToken(
-            String tokenName,
-            OtpValue otpValue,
-            final GenericOtpHandler callback
-    ) {
-        Map<String, String> headers = new HashMap<>();
+    private static void verifyWithToken(final String tokenName,
+                                        final OtpValue otpValue,
+                                        final GenericOtpHandler callback) {
+        final Map<String, String> headers = new HashMap<>();
         headers.put("Authorization", String.format(Locale.US, "Bearer %s", InBandVerificationConfig.JWT));
         headers.put("X-API-KEY", InBandVerificationConfig.API_KEY);
 
-        String jsonRequest = String.format(Locale.US, JSON_REQUEST, tokenName, otpValue.getOtp());
+        final String jsonRequest = String.format(Locale.US, JSON_REQUEST, tokenName, otpValue.getOtp());
 
         ExecutionService.getExecutionService().runOnBackgroundThread(
                 () -> doPostRequest(
@@ -115,14 +109,15 @@ public class InBandVerificationLogic extends AbstractBaseLogic {
                         headers,
                         jsonRequest,
                         (success, result) -> {
-                            Context context = getContext();
+                            final Context context = getContext();
                             assert context != null;
 
-                            boolean valid = success && result.contains("\"status\":\"Success\",");
-                            if (!valid)
+                            final boolean valid = success && result.contains("\"status\":\"Success\",");
+                            if (!valid) {
                                 result = context.getString(R.string.otp_verify_fail);
-                            else
+                            } else {
                                 result = context.getString(R.string.otp_verify_success);
+                            }
 
                             callback.onFinished(valid, result, otpValue.getLifespan());
                         }
@@ -130,16 +125,14 @@ public class InBandVerificationLogic extends AbstractBaseLogic {
         );
     }
 
-    private static HttpURLConnection createConnection(
-            @NonNull String hostUrl,
-            @NonNull Map<String, String> headers
-    ) throws IOException {
-        URL url = new URL(hostUrl);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+    private static HttpURLConnection createConnection(@NonNull final String hostUrl,
+                                                      @NonNull final Map<String, String> headers) throws IOException {
+        final URL url = new URL(hostUrl);
+        final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
-        for (Map.Entry<String, String> entry : headers.entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
+        for (final Map.Entry<String, String> entry : headers.entrySet()) {
+            final String key = entry.getKey();
+            final String value = entry.getValue();
             connection.setRequestProperty(key, value);
         }
 
@@ -153,16 +146,17 @@ public class InBandVerificationLogic extends AbstractBaseLogic {
         return connection;
     }
 
-    private static String convertStreamToString(InputStream inputStream) throws IOException {
+    private static String convertStreamToString(final InputStream inputStream) throws IOException {
         String response = "";
 
         do {
-            if (inputStream == null)
+            if (inputStream == null) {
                 break;
+            }
 
-            Writer writer = new StringWriter();
+            final Writer writer = new StringWriter();
 
-            char[] buffer = new char[1024];
+            final char[] buffer = new char[1024];
             try (Reader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8), 1024)) {
                 int numberOfCharacters = reader.read(buffer);
                 while (numberOfCharacters != -1) {
@@ -185,23 +179,21 @@ public class InBandVerificationLogic extends AbstractBaseLogic {
      * @param body     Body.
      * @param callback Callback back to the application.
      */
-    private static void doPostRequest(
-            @NonNull String hostUrl,
-            @NonNull Map<String, String> headers,
-            @NonNull String body,
-            @NonNull GenericHandler callback
-    ) {
-        ExecutionService service = ExecutionService.getExecutionService();
+    private static void doPostRequest(@NonNull final String hostUrl,
+                                      @NonNull final Map<String, String> headers,
+                                      @NonNull final String body,
+                                      @NonNull final GenericHandler callback) {
+        final ExecutionService service = ExecutionService.getExecutionService();
 
         try {
-            HttpURLConnection connection = createConnection(hostUrl, headers);
+            final HttpURLConnection connection = createConnection(hostUrl, headers);
 
             try (OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream())) {
                 writer.write(body);
                 writer.flush();
             }
 
-            int statusCode = connection.getResponseCode();
+            final int statusCode = connection.getResponseCode();
             String responseBody;
             if (statusCode > 226) {
                 responseBody = "";
@@ -210,7 +202,7 @@ public class InBandVerificationLogic extends AbstractBaseLogic {
             }
 
             service.runOnMainUiThread(() -> callback.onFinished(true, responseBody));
-        } catch (IOException exception) {
+        } catch (final IOException exception) {
             service.runOnMainUiThread(() -> callback.onFinished(false, exception.getMessage()));
         }
     }

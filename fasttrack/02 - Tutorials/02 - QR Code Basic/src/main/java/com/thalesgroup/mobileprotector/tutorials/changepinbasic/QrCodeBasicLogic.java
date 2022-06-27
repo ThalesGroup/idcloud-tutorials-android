@@ -36,22 +36,22 @@ import java.math.BigInteger;
  * Logic for handling QR code related use case.
  */
 public class QrCodeBasicLogic extends BaseLogic {
-    public static void parseQRCode(String qrCode, QrCodeHandler handler) {
+    public static void parseQRCode(final String qrCode, final QrCodeHandler handler) {
         // Two components in frame are user id and registration code.
         try {
-            byte[] arr = new BigInteger(qrCode, 16).toByteArray();
-            String[] components = new String(arr).split(",");
+            final byte[] arr = new BigInteger(qrCode, 16).toByteArray();
+            final String[] components = new String(arr).split(",");
 
             if (components.length == 2) {
                 // Get actual values
-                String userId = components[0];
-                String registrationCode = components[1];
+                final String userId = components[0];
+                final String registrationCode = components[1];
 
                 handler.onFinished(true, userId, registrationCode, null);
             } else {
                 handler.onFinished(false, null, null, "STRING_QR_CODE_BASIC_FAILED_TO_PARSE");
             }
-        } catch (NumberFormatException exception) {
+        } catch (final NumberFormatException exception) {
             // Invalid not hex-string data from qr code.
             handler.onFinished(false, null, null, exception.getMessage());
         }

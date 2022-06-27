@@ -59,13 +59,13 @@ public class TransactionSignLogic extends BaseLogic {
     private static class KeyValue {
         private final String mKey, mValue;
 
-        KeyValue(@NonNull String key, @NonNull String value) {
+        KeyValue(@NonNull final String key, @NonNull final String value) {
             mKey = key;
             mValue = value;
         }
 
         byte[] getKeyValueUTF8() {
-            String keyValue = mKey + ":" + mValue;
+            final String keyValue = mKey + ":" + mValue;
             return keyValue.getBytes(StandardCharsets.UTF_8);
         }
     }
@@ -84,27 +84,25 @@ public class TransactionSignLogic extends BaseLogic {
      * @return Generated OTP.
      * @throws FastTrackException If error during OTP generation occurs.
      */
-    public static OtpValue generateOtp(
-            @NonNull String pin,
-            @NonNull String amount,
-            @NonNull String beneficiary
-    ) throws FastTrackException {
+    public static OtpValue generateOtp(@NonNull final String pin,
+                                       @NonNull final String amount,
+                                       @NonNull final String beneficiary) throws FastTrackException {
 
-        OathMobileProtector mobileProtector = FastTrack.getInstance().getOathMobileProtectorInstance();
+        final OathMobileProtector mobileProtector = FastTrack.getInstance().getOathMobileProtectorInstance();
 
-        Set<String> tokenDeviceNames = mobileProtector.getTokenDeviceNames();
+        final Set<String> tokenDeviceNames = mobileProtector.getTokenDeviceNames();
 
-        OcraSettings ocraSettings = new OcraSettings();
+        final OcraSettings ocraSettings = new OcraSettings();
         ocraSettings.setOcraSuite(OtpConfig.getOcraSuite());
 
-        OathTokenDevice token = mobileProtector.getTokenDevice(
+        final OathTokenDevice token = mobileProtector.getTokenDevice(
                 tokenDeviceNames.iterator().next(),
                 ProvisioningConfig.getCustomFingerprintData(),
                 ocraSettings
         );
         assert token != null;
 
-        String otp = token.getOcraOtp(pin,
+        final String otp = token.getOcraOtp(pin,
                 getServerChallenge(amount, beneficiary),
                 null,
                 null,
@@ -126,8 +124,8 @@ public class TransactionSignLogic extends BaseLogic {
      * @param beneficiary Beneficiary to be signed.
      * @return Calculated challenge based on IdCloud implementation.
      */
-    private static String getServerChallenge(String amount, String beneficiary) {
-        List<KeyValue> values = new ArrayList<>();
+    private static String getServerChallenge(final String amount, final String beneficiary) {
+        final List<KeyValue> values = new ArrayList<>();
         values.add(new KeyValue("amount", amount));
         values.add(new KeyValue("beneficiary", beneficiary));
 
@@ -140,16 +138,16 @@ public class TransactionSignLogic extends BaseLogic {
      * @param values List of key values object we want to use for ocra calculation.
      * @return SecureString representation of challenge or null in case of error.
      */
-    private static String getOcraChallenge(List<KeyValue> values) {
+    private static String getOcraChallenge(final List<KeyValue> values) {
         String retValue = null;
 
         // Use builder to append TLV
-        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 
         // Go through all values, calculate and append TLV for each one of them.
         for (int index = 0; index < values.size(); index++) {
             // Convert key-value to UTF8 string
-            byte[] keyValueUTF8 = values.get(index).getKeyValueUTF8();
+            final byte[] keyValueUTF8 = values.get(index).getKeyValueUTF8();
 
             // Build TLV.
             buffer.write(0xDF);
@@ -160,12 +158,12 @@ public class TransactionSignLogic extends BaseLogic {
 
         // Try to calculate digest from final string and build retValue.
         try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] hash = digest.digest(buffer.toByteArray());
+            final MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            final byte[] hash = digest.digest(buffer.toByteArray());
 
             // Server challenge expect hex string not byte array.
             retValue = bytesToHex(hash);
-        } catch (NoSuchAlgorithmException exception) {
+        } catch (final NoSuchAlgorithmException exception) {
             // Ignore. In worst case it will generate invalid ocra.
         }
 
@@ -178,10 +176,10 @@ public class TransactionSignLogic extends BaseLogic {
      * @param bytes Bytes from which to create the hexa string.
      * @return Hexa string.
      */
-    private static String bytesToHex(byte[] bytes) {
-        char[] hexChars = new char[bytes.length * 2];
+    private static String bytesToHex(final byte[] bytes) {
+        final char[] hexChars = new char[bytes.length * 2];
         for (int index = 0; index < bytes.length; index++) {
-            int value = bytes[index] & 0xFF;
+            final int value = bytes[index] & 0xFF;
             hexChars[index * 2] = HEX_ARRAY[value >>> 4];
             hexChars[index * 2 + 1] = HEX_ARRAY[value & 0x0F];
         }

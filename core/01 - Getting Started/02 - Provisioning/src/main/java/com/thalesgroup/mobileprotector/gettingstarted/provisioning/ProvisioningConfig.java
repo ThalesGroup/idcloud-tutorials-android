@@ -29,7 +29,7 @@ package com.thalesgroup.mobileprotector.gettingstarted.provisioning;
 
 import com.gemalto.idp.mobile.core.net.TlsConfiguration;
 
-import java.nio.charset.StandardCharsets;
+import java.io.UnsupportedEncodingException;
 
 /**
  * Values needed for Token provisioning.

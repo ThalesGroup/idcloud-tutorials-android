@@ -70,7 +70,7 @@ public class QrCodeBasicActivity extends AdvancedSetupActivity implements QrCode
 
     @Override
     public void onProvisionUsingQr() {
-        QrCodeReaderFragment qrCodeReaderFragment = new QrCodeReaderFragment();
+        final QrCodeReaderFragment qrCodeReaderFragment = new QrCodeReaderFragment();
         qrCodeReaderFragment.setDelegate(this);
 
         dialogFragmentShow(qrCodeReaderFragment, DIALOG_TAG_QR_CODE_READER, true);
@@ -81,7 +81,7 @@ public class QrCodeBasicActivity extends AdvancedSetupActivity implements QrCode
     //region QrCodeReaderFragmentDelegate
 
     @Override
-    public void onQRCodeProvided(String qrCode) {
+    public void onQRCodeProvided(final String qrCode) {
         // Hide reader.
         dialogFragmentHide();
 

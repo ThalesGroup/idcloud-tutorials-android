@@ -39,7 +39,7 @@ import java.net.URL;
  */
 public class OobSetupLogic extends TransactionSignLogic {
 
-    private static MobileMessenger mobileMessenger;
+    private static MobileMessenger sMobileMessenger;
 
     /**
      * Initializes {@link MobileMessenger} with parameters from {@link OobSetupConfig}, provided to application
@@ -48,9 +48,9 @@ public class OobSetupLogic extends TransactionSignLogic {
      * @return Returns {@link MobileMessenger} object.
      */
     public static MobileMessenger getMobileMessenger() {
-        if (mobileMessenger == null) {
+        if (sMobileMessenger == null) {
             try {
-                MobileMessenger.Builder builder = FastTrack.getInstance().getMobileMessengerBuilder(
+                final MobileMessenger.Builder builder = FastTrack.getInstance().getMobileMessengerBuilder(
                         new URL(OobSetupConfig.getOobRegistrationUrl()),
                         OobSetupConfig.getOobDomain(),
                         OobSetupConfig.getOobAppId(),
@@ -62,13 +62,13 @@ public class OobSetupLogic extends TransactionSignLogic {
                         .withTlsConfiguration(OobSetupConfig.getOobTLSConfiguration())
                         .withMessengerRootPolicy(OobSetupConfig.getMessengerRootPolicy());
 
-                mobileMessenger = builder.build();
-            } catch (MalformedURLException ex) {
+                sMobileMessenger = builder.build();
+            } catch (final MalformedURLException ex) {
                 throw new IllegalStateException(ex);
             }
         }
 
-        return mobileMessenger;
+        return sMobileMessenger;
     }
 
 }

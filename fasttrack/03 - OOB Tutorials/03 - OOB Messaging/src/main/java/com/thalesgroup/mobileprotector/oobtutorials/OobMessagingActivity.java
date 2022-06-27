@@ -73,19 +73,21 @@ public class OobMessagingActivity extends OobRegistrationActivity implements Oob
 
         // Assign all module specific UI element.
         mBtnFetchMessage = findViewById(R.id.activity_oobmessaging_btn_fetch_message);
-        if (mBtnFetchMessage != null)
+        if (mBtnFetchMessage != null) {
             mBtnFetchMessage.setOnClickListener(sender -> OobMessagingLogic.fetchMessages());
+        }
     }
 
     @Nullable
     @Override
     protected OathTokenDevice updateGui() {
         // Get stored token
-        OathTokenDevice token = super.updateGui();
+        final OathTokenDevice token = super.updateGui();
 
         // To make demo simple we will just disable / enable UI.
-        if (mBtnFetchMessage != null)
+        if (mBtnFetchMessage != null) {
             mBtnFetchMessage.setEnabled(token != null);
+        }
 
         return token;
     }
@@ -119,7 +121,7 @@ public class OobMessagingActivity extends OobRegistrationActivity implements Oob
     //region OobMessageListener
 
     @Override
-    public void onOobLoadingShow(int resId) {
+    public void onOobLoadingShow(final int resId) {
         loadingBarShow(resId);
     }
 
@@ -129,24 +131,22 @@ public class OobMessagingActivity extends OobRegistrationActivity implements Oob
     }
 
     @Override
-    public void onOobDisplayMessage(String message) {
+    public void onOobDisplayMessage(final String message) {
         displayMessageDialog(message);
     }
 
     @Override
-    public void onOobDisplayMessage(int resId) {
+    public void onOobDisplayMessage(final int resId) {
         displayMessageDialog(resId);
     }
 
     @Override
-    public void onOobApproveMessage(
-            String message,
-            String serverChallenge,
-            ApproveMessageResponse handler
-    ) {
+    public void onOobApproveMessage(final String message,
+                                    final String serverChallenge,
+                                    final ApproveMessageResponse handler) {
 
         // Prepare dialog to display.
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.push_approve_question);
         builder.setMessage(message);
 
@@ -176,14 +176,13 @@ public class OobMessagingActivity extends OobRegistrationActivity implements Oob
 
     //region Private Helpers
 
-    private void approveMessage(
-            String serverChallenge,
-            ApproveMessageResponse handler
-    ) {
+    private void approveMessage(final String serverChallenge,
+                                final ApproveMessageResponse handler) {
         // Get currently provisioned token.
-        OathTokenDevice token = ProvisioningLogic.getToken();
-        if (token == null)
+        final OathTokenDevice token = ProvisioningLogic.getToken();
+        if (token == null) {
             throw new IllegalStateException(getString(R.string.token_not_provisioned));
+        }
 
         // Get pin from user.
         userPin((pin, error) -> {
@@ -195,13 +194,14 @@ public class OobMessagingActivity extends OobRegistrationActivity implements Oob
                     OtpValue otpValue = null;
                     try {
 
-                        if (serverChallenge == null)
+                        if (serverChallenge == null) {
                             otpValue = OtpLogic.generateOtp(token, pin);
-                        else
+                        } else {
                             otpValue = OobMessagingLogic.generateOtp(token, pin, serverChallenge);
+                        }
 
-                    } catch (FastTrackException ex) {
-                        displayMessageDialog(ex);
+                    } catch (final FastTrackException exception) {
+                        displayMessageDialog(exception);
                     }
 
                     // We can return control to handler.
