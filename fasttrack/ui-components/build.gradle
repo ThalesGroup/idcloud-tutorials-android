@@ -7,6 +7,6 @@ dependencies {
     api project(":common-utils")
 
     // QR Code Scanner
-    api "me.dm7.barcodescanner:zxing:1.9.13"
+    api "me.dm7.barcodescanner:zxing:1.9"
 
 }
