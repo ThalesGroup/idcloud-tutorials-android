@@ -172,10 +172,6 @@ dependencies {
     implementation "com.google.firebase:firebase-core:16.0.1"
     //endregion
 
-    //region Add Mobile Protector SDK libraries.
-    debugImplementation fileTree(dir: "${EZIO_SDK}/debug", include: ["protector-oath.aar"])
-    releaseImplementation fileTree(dir: "${EZIO_SDK}/release", include: ["protector-oath.aar"])
-
     // Add JNA dependency.
     implementation "net.java.dev.jna:jna:5.5.0@aar"
     //endregion
