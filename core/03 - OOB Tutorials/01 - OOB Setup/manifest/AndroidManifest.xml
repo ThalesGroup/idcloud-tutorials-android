@@ -9,7 +9,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name="com.thalesgroup.mobileprotector.oobtutorials.OobSetupActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

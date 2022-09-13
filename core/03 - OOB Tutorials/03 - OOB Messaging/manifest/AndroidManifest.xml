@@ -9,7 +9,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name="com.thalesgroup.mobileprotector.oobtutorials.OobMessagingActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -17,7 +18,8 @@
             </intent-filter>
         </activity>
 
-        <service android:name="com.thalesgroup.mobileprotector.oobtutorials.oobregistration.OobPushService">
+        <service android:name="com.thalesgroup.mobileprotector.oobtutorials.oobregistration.OobPushService"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
